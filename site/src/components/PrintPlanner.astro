@@ -1,0 +1,297 @@
+---
+import { companionContentBySlug, itinerary } from '../data/itinerary';
+
+const {
+	initialSelectedSlugs = [],
+	returnHref = '/#itinerary',
+	returnLabel = 'Back to full itinerary',
+	title = 'Print the safari itinerary',
+	description = 'Choose one or more days, preview the printout, and send it to the printer.',
+} = Astro.props;
+
+const initialSelected = new Set(initialSelectedSlugs as string[]);
+const dayEntries = itinerary.map((entry) => ({
+	entry,
+	companion: companionContentBySlug[entry.slug],
+	selected: initialSelected.has(entry.slug),
+	formattedDate: new Date(entry.date).toLocaleDateString('en-US', {
+		weekday: 'long',
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric',
+	}),
+}));
+
+const selectedCount = dayEntries.filter((item) => item.selected).length;
+---
+
+<section class="detail-hero print-hero">
+	<a class="back-link" href={returnHref}>{returnLabel}</a>
+	<p class="eyebrow">Print</p>
+	<h1>{title}</h1>
+	<p class="lead">{description}</p>
+	<div class="print-toolbar">
+		<button class="button button--primary" type="button" data-print-button disabled={selectedCount === 0}>
+			Print selected days
+		</button>
+		<button class="button button--ghost" type="button" data-select-all>All days</button>
+		<button class="button button--ghost" type="button" data-clear-selection>Clear</button>
+	</div>
+	<p class="print-status" data-print-status>
+		{selectedCount === 0 ? 'Select one or more days to build the printout.' : `${selectedCount} day${selectedCount === 1 ? '' : 's'} selected for printing.`}
+	</p>
+</section>
+
+<section class="section-card print-selector" aria-label="Choose itinerary days to print">
+	<h2>Choose the days to include</h2>
+	<form data-print-form>
+		<div class="print-selector__grid">
+			{dayEntries.map(({ entry, companion, selected }) => (
+				<label class:list={['print-toggle', selected && 'print-toggle--selected']} data-print-toggle>
+					<input type="checkbox" name="days" value={entry.slug} checked={selected} />
+					<span>Day {entry.day}</span>
+					<strong>{entry.title}</strong>
+					<small>{companion.synopsis}</small>
+				</label>
+			))}
+		</div>
+	</form>
+</section>
+
+<section class="print-preview" aria-label="Printable itinerary preview">
+	<p class="print-empty" data-print-empty hidden={selectedCount > 0}>Select one or more days above to preview the print layout.</p>
+	{dayEntries.map(({ entry, companion, selected, formattedDate }) => (
+		<article class="detail-card print-day" data-print-day={entry.slug} hidden={!selected}>
+			<p class="eyebrow">Day {entry.day}</p>
+			<h2>{entry.title}</h2>
+			<p class="print-day__summary">{companion.richerSummary}</p>
+			<div class="print-day__meta">
+				<div>
+					<span>Date</span>
+					<strong>{formattedDate}</strong>
+				</div>
+				<div>
+					<span>Route</span>
+					<strong>{entry.route}</strong>
+				</div>
+				<div>
+					<span>Overnight</span>
+					<strong>{entry.overnight}</strong>
+				</div>
+				<div>
+					<span>Meals</span>
+					<strong>{entry.meals.length ? entry.meals.join(', ') : 'In transit'}</strong>
+				</div>
+			</div>
+			<div class="print-day__grid">
+				<div>
+					<h3>Highlights</h3>
+					<ul class="detail-list">
+						{entry.highlights.map((item: string) => <li>{item}</li>)}
+					</ul>
+				</div>
+				<div>
+					<h3>Look Out For</h3>
+					<ul class="detail-list">
+						{companion.featuredMoments.map((item: string) => <li>{item}</li>)}
+					</ul>
+				</div>
+				<div>
+					<h3>Practical Notes</h3>
+					<ul class="detail-list">
+						{companion.practicalNotes.map((item: string) => <li>{item}</li>)}
+					</ul>
+				</div>
+			</div>
+		</article>
+	))}
+</section>
+
+<script>
+	const form = document.querySelector('[data-print-form]');
+	const printButton = document.querySelector('[data-print-button]');
+	const selectAllButton = document.querySelector('[data-select-all]');
+	const clearButton = document.querySelector('[data-clear-selection]');
+	const status = document.querySelector('[data-print-status]');
+	const emptyState = document.querySelector('[data-print-empty]');
+
+	if (form && printButton && selectAllButton && clearButton && status && emptyState) {
+		const checkboxes = Array.from(form.querySelectorAll('input[name="days"]'));
+		const toggles = Array.from(form.querySelectorAll('[data-print-toggle]'));
+		const previewDays = Array.from(document.querySelectorAll('[data-print-day]'));
+
+		const syncSelection = () => {
+			const selectedSlugs = checkboxes.filter((input) => input.checked).map((input) => input.value);
+			const selectedSet = new Set(selectedSlugs);
+
+			toggles.forEach((toggle) => {
+				const input = toggle.querySelector('input[name="days"]');
+				toggle.classList.toggle('print-toggle--selected', Boolean(input?.checked));
+			});
+
+			previewDays.forEach((article) => {
+				const slug = article.getAttribute('data-print-day');
+				article.hidden = !slug || !selectedSet.has(slug);
+			});
+
+			printButton.disabled = selectedSlugs.length === 0;
+			status.textContent =
+				selectedSlugs.length === 0
+					? 'Select one or more days to build the printout.'
+					: `${selectedSlugs.length} day${selectedSlugs.length === 1 ? '' : 's'} selected for printing.`;
+			emptyState.hidden = selectedSlugs.length > 0;
+		};
+
+		form.addEventListener('change', syncSelection);
+		selectAllButton.addEventListener('click', () => {
+			checkboxes.forEach((input) => {
+				input.checked = true;
+			});
+			syncSelection();
+		});
+		clearButton.addEventListener('click', () => {
+			checkboxes.forEach((input) => {
+				input.checked = false;
+			});
+			syncSelection();
+		});
+		printButton.addEventListener('click', () => {
+			window.print();
+		});
+
+		syncSelection();
+	}
+</script>
+
+<style>
+	.print-hero {
+		display: grid;
+		gap: 16px;
+	}
+
+	.print-toolbar,
+	.print-selector__grid,
+	.print-day__meta,
+	.print-day__grid,
+	.print-preview {
+		display: grid;
+		gap: 16px;
+	}
+
+	.print-toolbar {
+		grid-auto-flow: column;
+		justify-content: start;
+	}
+
+	.print-status {
+		margin: 0;
+		font-weight: 700;
+		color: var(--clay);
+	}
+
+	.print-selector {
+		margin-bottom: 22px;
+	}
+
+	.print-selector h2 {
+		margin-bottom: 16px;
+	}
+
+	.print-selector form {
+		margin: 0;
+	}
+
+	.print-selector__grid {
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	}
+
+	.print-toggle {
+		display: grid;
+		gap: 8px;
+		padding: 18px;
+		border-radius: 12px;
+		border: 1px solid var(--line);
+		background: rgba(255, 255, 255, 0.55);
+		cursor: pointer;
+	}
+
+	.print-toggle--selected {
+		border-color: rgba(163, 85, 45, 0.35);
+		background: rgba(255, 255, 255, 0.8);
+		box-shadow: 0 12px 24px rgba(27, 29, 26, 0.08);
+	}
+
+	.print-toggle input {
+		margin: 0;
+	}
+
+	.print-toggle span,
+	.print-day__meta span {
+		display: block;
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		opacity: 0.65;
+	}
+
+	.print-toggle strong,
+	.print-day__meta strong {
+		display: block;
+		margin-top: 6px;
+	}
+
+	.print-toggle small {
+		font-size: 0.94rem;
+		line-height: 1.55;
+	}
+
+	.print-preview {
+		gap: 22px;
+	}
+
+	.print-empty,
+	.print-day__summary {
+		margin: 0;
+		line-height: 1.7;
+	}
+
+	.print-day {
+		display: grid;
+		gap: 18px;
+	}
+
+	.print-day__meta,
+	.print-day__grid {
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	}
+
+	.print-day__grid h3 {
+		margin-bottom: 10px;
+	}
+
+	@media (max-width: 720px) {
+		.print-toolbar {
+			grid-auto-flow: row;
+		}
+	}
+
+	@media print {
+		.print-hero,
+		.print-selector,
+		.print-empty {
+			display: none;
+		}
+
+		.print-day {
+			break-inside: avoid;
+			page-break-inside: avoid;
+			break-after: page;
+			page-break-after: always;
+		}
+
+		.print-day:last-child {
+			break-after: auto;
+			page-break-after: auto;
+		}
+	}
+</style>

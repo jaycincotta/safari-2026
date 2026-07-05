@@ -16,7 +16,7 @@ const currentIndex = itinerary.findIndex((item) => item.slug === entry.slug);
 const previous = currentIndex > 0 ? itinerary[currentIndex - 1] : null;
 const next = currentIndex < itinerary.length - 1 ? itinerary[currentIndex + 1] : null;
 const companion = companionContentBySlug[entry.slug];
-const nearbyDays = itinerary.slice(Math.max(0, currentIndex - 2), Math.min(itinerary.length, currentIndex + 3));
+const orderedDays = [...itinerary.slice(currentIndex), ...itinerary.slice(0, currentIndex)];
 const photos = getPhotosForDay(entry);
 
 const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
@@ -30,31 +30,29 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
 <Layout title={`Day ${entry.day} | Great Migration Safari 2026`} description={entry.summary}>
   <main class="page-shell">
     <section class="detail-hero">
-      <a class="back-link" href="/#itinerary">Back to full itinerary</a>
-      <nav class="day-browse" aria-label="Quick browse between days">
-        {previous ? (
-          <a class="day-browse__link" href={`/itinerary/${previous.slug}/`}>
-            <span>Previous</span>
-            <strong>Day {previous.day}</strong>
-          </a>
-        ) : (
-          <span class="day-browse__spacer" />
-        )}
-        <div class="day-browse__status">
-          <span>Quick browse</span>
-          <strong>Day {entry.day} of {itinerary.length}</strong>
-        </div>
-        {next ? (
-          <a class="day-browse__link day-browse__link--next" href={`/itinerary/${next.slug}/`}>
-            <span>Next</span>
-            <strong>Day {next.day}</strong>
-          </a>
-        ) : (
-          <span class="day-browse__spacer" />
-        )}
-      </nav>
-      <section class="day-rail" aria-label="Swipeable nearby day summaries">
-        {nearbyDays.map((dayItem) => {
+      <div class="detail-hero__bar">
+        <a class="back-link" href="/#itinerary">Back to full itinerary</a>
+        <nav class="day-browse" aria-label="Browse between days">
+          {previous ? (
+            <a class="day-browse__link" href={`/itinerary/${previous.slug}/`}>
+              <span>Previous</span>
+              <strong>Day {previous.day}</strong>
+            </a>
+          ) : (
+            <span class="day-browse__spacer" />
+          )}
+          {next ? (
+            <a class="day-browse__link day-browse__link--next" href={`/itinerary/${next.slug}/`}>
+              <span>Next</span>
+              <strong>Day {next.day}</strong>
+            </a>
+          ) : (
+            <span class="day-browse__spacer" />
+          )}
+        </nav>
+      </div>
+      <section class="day-rail" aria-label="Browse all safari days">
+        {orderedDays.map((dayItem) => {
           const summary = companionContentBySlug[dayItem.slug]?.synopsis ?? dayItem.summary;
           const isCurrent = dayItem.slug === entry.slug;
 
@@ -127,15 +125,6 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
           {companion.practicalNotes.map((item: string) => <li>{item}</li>)}
         </ul>
       </article>
-
-      <article class="detail-card">
-        <h2>For the day</h2>
-        <p>
-			  Keep this page as the quick reference for the route, the overnight stop, and the few
-			  moments we most want to remember before heading out.
-        </p>
-        <button class="print-button" type="button" onclick="window.print()">Print this day</button>
-      </article>
     </section>
 
     {photos.length ? (
@@ -173,6 +162,7 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
 
     <nav class="day-nav" aria-label="Day navigation">
       {previous ? <a href={`/itinerary/${previous.slug}/`}>Previous: Day {previous.day}</a> : <span />}
+      <a class="day-nav__print" href={`/print/${entry.slug}/`}>Print this day</a>
       {next ? <a href={`/itinerary/${next.slug}/`}>Next: Day {next.day}</a> : <span />}
     </nav>
   </main>

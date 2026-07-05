@@ -1,0 +1,26 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PrintPlanner from '../../components/PrintPlanner.astro';
+import { itinerary } from '../../data/itinerary';
+
+export function getStaticPaths() {
+	return itinerary.map((entry) => ({
+		params: { day: entry.slug },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+---
+
+<Layout title={`Print Day ${entry.day} | Great Migration Safari 2026`} description={`Print options for Day ${entry.day} of the safari.`}>
+	<main class="page-shell">
+		<PrintPlanner
+			initialSelectedSlugs={[entry.slug]}
+			returnHref={`/itinerary/${entry.slug}/`}
+			returnLabel={`Back to Day ${entry.day}`}
+			title={`Print Day ${entry.day}`}
+			description="Start with this day selected, then add any others you want in the same printout."
+		/>
+	</main>
+</Layout>
