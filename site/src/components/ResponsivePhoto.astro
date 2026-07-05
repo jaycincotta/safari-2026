@@ -1,0 +1,41 @@
+---
+const {
+  photo,
+  sizes = '(min-width: 960px) 42vw, 100vw',
+  loading = 'lazy',
+  class: className = '',
+} = Astro.props;
+
+const baseName = photo.source.replace(/\.[^.]+$/, '');
+const srcsetFor = (extension) =>
+  photo.widths
+    .map((width) => `/media/optimized/${photo.slug}/${baseName}-${width}.${extension} ${width}w`)
+    .join(', ');
+
+const fallbackSrc = `/media/optimized/${photo.slug}/${baseName}-${photo.defaultWidth}.jpg`;
+---
+
+<figure class={`media-figure ${className}`.trim()}>
+  <picture class="media-frame">
+    <source type="image/webp" srcset={srcsetFor('webp')} sizes={sizes} />
+    <source type="image/jpeg" srcset={srcsetFor('jpg')} sizes={sizes} />
+    <img
+      src={fallbackSrc}
+      srcset={srcsetFor('jpg')}
+      sizes={sizes}
+      alt={photo.alt}
+      loading={loading}
+      decoding="async"
+    />
+  </picture>
+  <figcaption class="media-caption">
+    <strong>{photo.caption}</strong>
+    <span>{photo.location}</span>
+    <p>
+      Photo by {photo.artist}.
+      <a href={photo.sourcePage} target="_blank" rel="noreferrer">Source</a>
+      ·
+      <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.licenseLabel}</a>
+    </p>
+  </figcaption>
+</figure>

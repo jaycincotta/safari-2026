@@ -1,5 +1,7 @@
 # build output
 dist/
+public/media/optimized/
+.media-cache/
 
 # generated types
 .astro/

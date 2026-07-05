@@ -1,46 +1,33 @@
-# Astro Starter Kit: Basics
+# Safari Site
 
-```sh
-npm create astro@latest -- --template basics
-```
+Static-first Astro site for the Kenya and Tanzania safari itinerary.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+All commands below run from the `site` folder:
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command | Action |
+| :-- | :-- |
+| `npm install` | Install dependencies |
+| `npm run media:optimize` | Generate responsive publishable images from local source files |
+| `npm run dev` | Optimize media if needed, then start the Astro dev server |
+| `npm run build` | Optimize media if needed, then build the production site |
+| `npm run preview` | Preview the built site |
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Media Workflow
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Original source images live in `src/media/source/`.
 
-## 🧞 Commands
+Media metadata and attribution live in `src/data/media-library.json`.
 
-All commands are run from the root of the project, from a terminal:
+Optimized publishable variants are generated into `public/media/optimized/` during the build. The originals stay out of the published asset tree.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+The optimizer keeps a local manifest in `.media-cache/manifest.json` so unchanged source images are skipped on later runs.
 
-## 👀 Want to learn more?
+To add a new image:
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+1. Drop the highest-quality licensed source file into `src/media/source/`.
+2. Add its metadata, attribution, and responsive widths to `src/data/media-library.json`.
+3. Optionally attach it to shared destination keys or specific day slugs.
+4. Run `npm run media:optimize`.
+5. Reference the generated asset set through `src/components/ResponsivePhoto.astro` or the helpers in `src/data/media-library.ts`.
