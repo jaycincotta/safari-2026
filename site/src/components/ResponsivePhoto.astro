@@ -1,4 +1,6 @@
 ---
+import { creatorProfile } from '../data/creator';
+
 const {
   photo,
   sizes = '(min-width: 960px) 42vw, 100vw',
@@ -16,6 +18,7 @@ const srcsetFor = (extension) =>
     .join(', ');
 
 const fallbackSrc = `/media/optimized/${photo.slug}/${baseName}-${photo.defaultWidth}.jpg`;
+const isPersonalPhoto = photo.creditType === 'personal';
 ---
 
 <figure class:list={['media-figure', className, overlayLinks.length && 'media-figure--overlay']}>
@@ -48,9 +51,16 @@ const fallbackSrc = `/media/optimized/${photo.slug}/${baseName}-${photo.defaultW
   </div>
   {showAttribution ? (
     <figcaption class="media-caption media-caption--subtle">
-      <p>
-        Photo by {photo.artist} · <a href={photo.sourcePage} target="_blank" rel="noreferrer">Source</a> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.licenseLabel}</a>
-      </p>
+      {isPersonalPhoto ? (
+        <div class="media-credit media-credit--personal" title={creatorProfile.personalPhotoLabel} aria-label={creatorProfile.personalPhotoLabel}>
+          <img src={creatorProfile.gravatarUrl} alt="" loading="lazy" decoding="async" />
+          <span class="sr-only">{creatorProfile.personalPhotoLabel}</span>
+        </div>
+      ) : (
+        <p>
+          Photo by {photo.artist} · <a href={photo.sourcePage} target="_blank" rel="noreferrer">Source</a> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.licenseLabel}</a>
+        </p>
+      )}
     </figcaption>
   ) : null}
 </figure>

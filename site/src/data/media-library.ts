@@ -13,6 +13,7 @@ export type MediaPhoto = {
   sourcePage: string;
   widths: number[];
   defaultWidth: number;
+  creditType?: 'third-party' | 'personal';
   featured?: boolean;
   days?: string[];
   destinations?: string[];

@@ -16,6 +16,7 @@
         "git rev-parse": true,
         "git config": true,
         "netlify": true,
-        "ForEach-Object": true
+        "ForEach-Object": true,
+        "Resolve-DnsName": true
     }
 }
