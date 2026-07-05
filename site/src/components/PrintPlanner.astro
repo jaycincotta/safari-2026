@@ -260,6 +260,11 @@ const selectedCount = dayEntries.filter((item) => item.selected).length;
 		gap: 18px;
 	}
 
+	.print-empty[hidden],
+	.print-day[hidden] {
+		display: none !important;
+	}
+
 	.print-day__meta,
 	.print-day__grid {
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
