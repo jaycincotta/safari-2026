@@ -1,4 +1,6 @@
 {
+    "git.autoRepositoryDetection": "openEditors",
+    "git.openRepositoryInParentFolders": "never",
     "chat.tools.terminal.autoApprove": {
         "Get-Command": true,
         "winget": true,
