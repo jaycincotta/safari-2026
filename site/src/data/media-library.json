@@ -15,6 +15,21 @@
     "destinations": ["masai-mara"]
   },
   {
+    "slug": "masai-mara-lion-portrait",
+    "source": "masai-mara-lion.jpg",
+    "alt": "Closer portrait crop of a male lion in Masai Mara National Park.",
+    "caption": "Masai Mara lion portrait",
+    "location": "Masai Mara National Park, Kenya",
+    "artist": "Volodymyr Burdiak",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Lion_male.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.18, "top": 0.14, "width": 0.62, "height": 0.62 },
+    "destinations": ["masai-mara"]
+  },
+  {
     "slug": "nairobi-giraffe-centre",
     "source": "nairobi-giraffe-centre.jpg",
     "alt": "Giraffe at the Giraffe Centre in Nairobi.",
@@ -29,6 +44,35 @@
     "days": ["day-1", "day-2", "day-6", "day-7"]
   },
   {
+    "slug": "nairobi-giraffe-centre-portrait",
+    "source": "nairobi-giraffe-centre.jpg",
+    "alt": "Closer giraffe portrait from the Nairobi Giraffe Centre.",
+    "caption": "Nairobi giraffe portrait",
+    "location": "Nairobi, Kenya",
+    "artist": "GioRan",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Giraffe_at_Giraffe_Centre_Nairobi,_Kenya.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.22, "top": 0.08, "width": 0.56, "height": 0.68 },
+    "days": ["day-2", "day-7"]
+  },
+  {
+    "slug": "nairobi-giraffe-centre-karen",
+    "source": "nairobi-giraffe-centre-karen.jpg",
+    "alt": "A wider giraffe centre scene in Nairobi Karen.",
+    "caption": "Nairobi giraffe centre grounds",
+    "location": "Nairobi, Kenya",
+    "artist": "Collins obiye",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:GIRAFFE_CENTRE_NAIROBI_KAREN.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "days": ["day-2", "day-7"]
+  },
+  {
     "slug": "nairobi-elephant-orphanage",
     "source": "nairobi-elephant-orphanage.jpg",
     "alt": "Young elephants at the Sheldrick Wildlife Trust orphanage in Nairobi.",
@@ -40,6 +84,49 @@
     "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephant_Orphanage_Nairobi.jpg",
     "widths": [640, 960, 1440, 1920],
     "defaultWidth": 1440,
+    "days": ["day-7"]
+  },
+  {
+    "slug": "nairobi-elephant-drinking",
+    "source": "nairobi-elephant-drinking.jpg",
+    "alt": "Young elephant at the Nairobi orphanage drinking from a hose.",
+    "caption": "Nairobi orphanage elephant",
+    "location": "Nairobi, Kenya",
+    "artist": "Sara Ahmed Naqvi",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephant_drinking_water_at_elephant_orphanage.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "days": ["day-7"]
+  },
+  {
+    "slug": "nairobi-orphan-elephants-feeding",
+    "source": "nairobi-orphan-elephants-feeding.jpg",
+    "alt": "Orphan elephant calves feeding at Sheldrick Wildlife Trust in Nairobi.",
+    "caption": "Sheldrick feeding line",
+    "location": "Nairobi, Kenya",
+    "artist": "Erahmbuthia",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Orphan_Elephants_feeding_at_Sheldrick_Wildlife_Trust_Orphanage.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "days": ["day-7"]
+  },
+  {
+    "slug": "nairobi-orphan-elephants-feeding-detail",
+    "source": "nairobi-orphan-elephants-feeding.jpg",
+    "alt": "Closer crop of orphan elephant calves feeding at Sheldrick Wildlife Trust.",
+    "caption": "Sheldrick elephant detail",
+    "location": "Nairobi, Kenya",
+    "artist": "Erahmbuthia",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Orphan_Elephants_feeding_at_Sheldrick_Wildlife_Trust_Orphanage.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.14, "top": 0.14, "width": 0.56, "height": 0.44 },
     "days": ["day-7"]
   },
   {
@@ -59,6 +146,35 @@
     "days": ["day-8", "day-9"]
   },
   {
+    "slug": "amboseli-kilimanjaro-close",
+    "source": "amboseli-kilimanjaro.jpg",
+    "alt": "Tighter crop of elephants with Mount Kilimanjaro beyond Amboseli.",
+    "caption": "Amboseli herd close",
+    "location": "Amboseli National Park, Kenya",
+    "artist": "Ninaras",
+    "licenseLabel": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Amboseli_National_Park_and_Mt._Kilimanjaro.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.1, "top": 0.18, "width": 0.7, "height": 0.56 },
+    "destinations": ["amboseli"]
+  },
+  {
+    "slug": "amboseli-elephants-kilimanjaro-legacy",
+    "source": "amboseli-elephants-kilimanjaro-legacy.jpg",
+    "alt": "Elephants in Amboseli with Mount Kilimanjaro in the background.",
+    "caption": "Amboseli under Kilimanjaro",
+    "location": "Amboseli National Park, Kenya",
+    "artist": "Amoghavarsha JS",
+    "licenseLabel": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephants_at_Amboseli_national_park_against_Mount_Kilimanjaro.jpg",
+    "widths": [640, 960, 1440],
+    "defaultWidth": 960,
+    "destinations": ["amboseli"]
+  },
+  {
     "slug": "tarangire-elephants",
     "source": "tarangire-elephants.jpg",
     "alt": "Elephants moving through Tarangire National Park.",
@@ -73,6 +189,21 @@
     "destinations": ["tarangire"]
   },
   {
+    "slug": "tarangire-elephants-close",
+    "source": "tarangire-elephants.jpg",
+    "alt": "Closer crop of elephants moving through Tarangire National Park.",
+    "caption": "Tarangire herd detail",
+    "location": "Tarangire National Park, Tanzania",
+    "artist": "John Mackenzie Burke",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephants_in_Tarangire_National_Park_(2015).jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.14, "top": 0.18, "width": 0.68, "height": 0.58 },
+    "destinations": ["tarangire"]
+  },
+  {
     "slug": "ngorongoro-zebra",
     "source": "ngorongoro-zebra.jpg",
     "alt": "Zebra in Ngorongoro Crater with open highland grassland behind.",
@@ -82,6 +213,35 @@
     "licenseLabel": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "sourcePage": "https://commons.wikimedia.org/wiki/File:Zebra,_Ngorongoro_(2015).jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "destinations": ["ngorongoro"]
+  },
+  {
+    "slug": "ngorongoro-zebra-close",
+    "source": "ngorongoro-zebra.jpg",
+    "alt": "Closer zebra crop from Ngorongoro Crater.",
+    "caption": "Ngorongoro zebra detail",
+    "location": "Ngorongoro Crater, Tanzania",
+    "artist": "John Mackenzie Burke",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Zebra,_Ngorongoro_(2015).jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.18, "top": 0.12, "width": 0.56, "height": 0.62 },
+    "destinations": ["ngorongoro"]
+  },
+  {
+    "slug": "ngorongoro-grants-zebra",
+    "source": "ngorongoro-grants-zebra.jpg",
+    "alt": "Grant's zebra in Ngorongoro Crater with wildebeest in the distance.",
+    "caption": "Ngorongoro Grant's zebra",
+    "location": "Ngorongoro Crater, Tanzania",
+    "artist": "Kufundisha",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Grant%27s_Zebra_in_Ngorongoro_Crater.jpg",
     "widths": [640, 960, 1440, 1920],
     "defaultWidth": 1440,
     "destinations": ["ngorongoro"]
@@ -101,6 +261,21 @@
     "destinations": ["masai-mara"]
   },
   {
+    "slug": "masai-mara-giraffes-horizon",
+    "source": "masai-mara-giraffes.jpg",
+    "alt": "A lower horizon crop of giraffes in the Masai Mara at golden hour.",
+    "caption": "Masai Mara horizon giraffes",
+    "location": "Masai Mara National Reserve, Kenya",
+    "artist": "Volodymyr Burdiak",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Three_giraffes_01.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.08, "top": 0.18, "width": 0.82, "height": 0.56 },
+    "destinations": ["masai-mara"]
+  },
+  {
     "slug": "serengeti-giraffe",
     "source": "serengeti-giraffe.jpg",
     "alt": "Masai giraffe in the Serengeti with dry grassland and open sky.",
@@ -115,6 +290,21 @@
     "destinations": ["serengeti"]
   },
   {
+    "slug": "serengeti-giraffe-portrait",
+    "source": "serengeti-giraffe.jpg",
+    "alt": "Closer portrait crop of a giraffe in the Serengeti.",
+    "caption": "Serengeti giraffe portrait",
+    "location": "Serengeti National Park, Tanzania",
+    "artist": "Plasticdying",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Giraffe_Standing_alone_in_Serengeti,_Tanzania.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.2, "top": 0.06, "width": 0.52, "height": 0.72 },
+    "destinations": ["serengeti"]
+  },
+  {
     "slug": "lake-eyasi-lovebirds",
     "source": "lake-eyasi-lovebirds.jpg",
     "alt": "Pair of lovebirds at the edge of Lake Eyasi.",
@@ -126,6 +316,21 @@
     "sourcePage": "https://commons.wikimedia.org/wiki/File:2024-06-10_Eyasi_birds_0548.jpg",
     "widths": [640, 960, 1440, 1920],
     "defaultWidth": 1440,
+    "days": ["day-15", "day-16"]
+  },
+  {
+    "slug": "lake-eyasi-lovebirds-close",
+    "source": "lake-eyasi-lovebirds.jpg",
+    "alt": "Closer crop of lovebirds perched near Lake Eyasi.",
+    "caption": "Lake Eyasi lovebirds detail",
+    "location": "Lake Eyasi, Tanzania",
+    "artist": "Bärbel Miemietz",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:2024-06-10_Eyasi_birds_0548.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.18, "top": 0.08, "width": 0.58, "height": 0.66 },
     "days": ["day-15", "day-16"]
   }
 ]

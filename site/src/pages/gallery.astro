@@ -1,12 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ResponsivePhoto from '../components/ResponsivePhoto.astro';
-import { getAllPhotos, getPhotoAppearances } from '../data/media-library';
+import { itinerary } from '../data/itinerary';
+import { getAllPhotos, getPhotoAppearances, getPhotoDaySlugs } from '../data/media-library';
 
 const galleryItems = getAllPhotos().map((photo) => ({
   photo,
   appearances: getPhotoAppearances(photo),
+	daySlugs: getPhotoDaySlugs(photo),
 }));
+
+const startDate = new Date(itinerary[0].date);
+const endDate = new Date(itinerary[itinerary.length - 1].date);
+
+const calendarStart = new Date(startDate);
+calendarStart.setDate(startDate.getDate() - startDate.getDay());
+
+const calendarEnd = new Date(endDate);
+calendarEnd.setDate(endDate.getDate() + (6 - endDate.getDay()));
+
+const calendarCells: Array<
+	| {
+			isoDate: string;
+			label: number;
+			monthLabel: string;
+			day?: (typeof itinerary)[number];
+			isInTrip: boolean;
+		}
+	| null
+> = [];
+
+for (let cursor = new Date(calendarStart); cursor <= calendarEnd; cursor.setDate(cursor.getDate() + 1)) {
+	const isoDate = cursor.toISOString().slice(0, 10);
+	const itineraryDay = itinerary.find((entry) => entry.date === isoDate);
+
+	calendarCells.push({
+		isoDate,
+		label: cursor.getDate(),
+		monthLabel: cursor.toLocaleDateString('en-US', { month: 'short' }),
+		day: itineraryDay,
+		isInTrip: Boolean(itineraryDay),
+	});
+}
+
+const calendarWeeks = [];
+for (let index = 0; index < calendarCells.length; index += 7) {
+	calendarWeeks.push(calendarCells.slice(index, index + 7));
+}
 ---
 
 <Layout
@@ -24,19 +64,164 @@ const galleryItems = getAllPhotos().map((photo) => ({
 			</p>
 		</section>
 
+		<section class="section-card gallery-filter" aria-labelledby="gallery-filter-title">
+			<div class="gallery-filter__intro">
+				<p class="eyebrow">Day selector</p>
+				<h2 id="gallery-filter-title">Browse by safari day</h2>
+				<p>
+					Select one day to focus the gallery, or click a second day to select a range.
+				</p>
+			</div>
+			<div class="gallery-filter__status">
+				<strong data-gallery-selection-label>Showing all safari photos</strong>
+				<button class="gallery-filter__clear" type="button" data-gallery-clear disabled>Clear selection</button>
+			</div>
+			<div class="calendar-grid" data-gallery-calendar>
+				<div class="calendar-grid__head">Sun</div>
+				<div class="calendar-grid__head">Mon</div>
+				<div class="calendar-grid__head">Tue</div>
+				<div class="calendar-grid__head">Wed</div>
+				<div class="calendar-grid__head">Thu</div>
+				<div class="calendar-grid__head">Fri</div>
+				<div class="calendar-grid__head">Sat</div>
+				{calendarWeeks.flat().map((cell) =>
+					cell ? (
+						cell.isInTrip && cell.day ? (
+							<button
+								type="button"
+								class="calendar-grid__day"
+								data-day-slug={cell.day.slug}
+								data-day-number={cell.day.day}
+								data-day-title={cell.day.title}
+								aria-pressed="false"
+							>
+								<span>{cell.monthLabel}</span>
+								<strong>{cell.label}</strong>
+								<em>Day {cell.day.day}</em>
+							</button>
+						) : (
+							<div class="calendar-grid__pad" aria-hidden="true">
+								<span>{cell.monthLabel}</span>
+								<strong>{cell.label}</strong>
+							</div>
+						)
+					) : null,
+				)}
+			</div>
+		</section>
+
 		<section class="section-card">
-			<div class="gallery-grid">
-				{galleryItems.map(({ photo, appearances }, index) => (
-					<ResponsivePhoto
-						photo={photo}
-						overlayLinks={appearances}
-						overlayLabel="Linked days"
-						loading={index < 4 ? 'eager' : 'lazy'}
-						sizes="(min-width: 1100px) 28vw, (min-width: 720px) 44vw, 100vw"
-						class="media-figure--gallery"
-					/>
+			<div class="gallery-grid" data-gallery-grid>
+				{galleryItems.map(({ photo, appearances, daySlugs }, index) => (
+					<article class="gallery-grid__item" data-gallery-item data-day-slugs={daySlugs.join(' ')}>
+						<ResponsivePhoto
+							photo={photo}
+							overlayLinks={appearances}
+							overlayLabel="Linked days"
+							loading={index < 6 ? 'eager' : 'lazy'}
+							sizes="(min-width: 1100px) 28vw, (min-width: 720px) 44vw, 100vw"
+							class="media-figure--gallery"
+						/>
+					</article>
 				))}
 			</div>
+			<p class="gallery-grid__empty" data-gallery-empty hidden>No photos match the selected day range yet.</p>
 		</section>
 	</main>
 </Layout>
+
+<script is:inline>
+	const dayButtons = Array.from(document.querySelectorAll('[data-day-slug]'));
+	const galleryItems = Array.from(document.querySelectorAll('[data-gallery-item]'));
+	const selectionLabel = document.querySelector('[data-gallery-selection-label]');
+	const clearButton = document.querySelector('[data-gallery-clear]');
+	const emptyState = document.querySelector('[data-gallery-empty]');
+
+	let startDay = null;
+	let endDay = null;
+
+	const dayMeta = dayButtons.map((button) => ({
+		slug: button.dataset.daySlug,
+		dayNumber: Number(button.dataset.dayNumber),
+		title: button.dataset.dayTitle,
+		button,
+	}));
+
+	function getSelectedRange() {
+		if (!startDay) return [];
+		if (!endDay) return [startDay];
+
+		const low = Math.min(startDay.dayNumber, endDay.dayNumber);
+		const high = Math.max(startDay.dayNumber, endDay.dayNumber);
+		return dayMeta.filter((day) => day.dayNumber >= low && day.dayNumber <= high);
+	}
+
+	function updateLabel(selectedRange) {
+		if (!selectionLabel) return;
+		if (!selectedRange.length) {
+			selectionLabel.textContent = 'Showing all safari photos';
+			return;
+		}
+		if (selectedRange.length === 1) {
+			selectionLabel.textContent = `Showing photos for Day ${selectedRange[0].dayNumber} · ${selectedRange[0].title}`;
+			return;
+		}
+		selectionLabel.textContent = `Showing photos for Days ${selectedRange[0].dayNumber}–${selectedRange[selectedRange.length - 1].dayNumber}`;
+	}
+
+	function updateButtons(selectedRange) {
+		const selectedSlugs = new Set(selectedRange.map((day) => day.slug));
+		dayMeta.forEach((day) => {
+			const isSelected = selectedSlugs.has(day.slug);
+			day.button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+			day.button.dataset.selectionState = isSelected ? 'selected' : '';
+		});
+	}
+
+	function updateGallery(selectedRange) {
+		const selectedSlugs = new Set(selectedRange.map((day) => day.slug));
+		let visibleCount = 0;
+
+		galleryItems.forEach((item) => {
+			const itemSlugs = (item.getAttribute('data-day-slugs') || '').split(/\s+/).filter(Boolean);
+			const isVisible = !selectedRange.length || itemSlugs.some((slug) => selectedSlugs.has(slug));
+			item.hidden = !isVisible;
+			if (isVisible) visibleCount += 1;
+		});
+
+		if (emptyState) {
+			emptyState.hidden = visibleCount !== 0;
+		}
+	}
+
+	function syncUi() {
+		const selectedRange = getSelectedRange();
+		updateLabel(selectedRange);
+		updateButtons(selectedRange);
+		updateGallery(selectedRange);
+		if (clearButton) clearButton.disabled = selectedRange.length === 0;
+	}
+
+	dayMeta.forEach((day) => {
+		day.button.addEventListener('click', () => {
+			if (!startDay || (startDay && endDay)) {
+				startDay = day;
+				endDay = null;
+			} else if (startDay.slug === day.slug) {
+				startDay = null;
+				endDay = null;
+			} else {
+				endDay = day;
+			}
+			syncUi();
+		});
+	});
+
+	clearButton?.addEventListener('click', () => {
+		startDay = null;
+		endDay = null;
+		syncUi();
+	});
+
+	syncUi();
+</script>

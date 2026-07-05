@@ -50,8 +50,28 @@ function buildFingerprint(item, sourceStats) {
     sourceMtimeMs: sourceStats.mtimeMs,
     widths: item.widths,
     defaultWidth: item.defaultWidth,
+    crop: item.crop ?? null,
     optimizationProfile,
   });
+}
+
+async function createBasePipeline(item, sourcePath) {
+  if (!item.crop) {
+    return sharp(sourcePath);
+  }
+
+  const sourceImage = sharp(sourcePath);
+  const metadata = await sourceImage.metadata();
+  if (!metadata.width || !metadata.height) {
+    throw new Error(`Unable to read dimensions for ${item.source}`);
+  }
+
+  const left = Math.max(0, Math.min(metadata.width - 1, Math.floor(metadata.width * item.crop.left)));
+  const top = Math.max(0, Math.min(metadata.height - 1, Math.floor(metadata.height * item.crop.top)));
+  const width = Math.max(1, Math.min(metadata.width - left, Math.floor(metadata.width * item.crop.width)));
+  const height = Math.max(1, Math.min(metadata.height - top, Math.floor(metadata.height * item.crop.height)));
+
+  return sharp(sourcePath).extract({ left, top, width, height });
 }
 
 async function optimizeItem(item, manifest) {
@@ -63,6 +83,7 @@ async function optimizeItem(item, manifest) {
   const fingerprint = buildFingerprint(item, sourceStats);
   const previousFingerprint = manifest[item.slug]?.fingerprint;
   let didOptimize = false;
+  const basePipeline = await createBasePipeline(item, sourcePath);
 
   await mkdir(outputDir, { recursive: true });
 
@@ -80,7 +101,7 @@ async function optimizeItem(item, manifest) {
 
     didOptimize = true;
 
-    const resized = sharp(sourcePath).resize({
+    const resized = basePipeline.clone().resize({
       width,
       withoutEnlargement: true,
       fit: 'inside',

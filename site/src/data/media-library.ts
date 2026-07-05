@@ -14,6 +14,12 @@ export type MediaPhoto = {
   widths: number[];
   defaultWidth: number;
   creditType?: 'third-party' | 'personal';
+  crop?: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
   featured?: boolean;
   days?: string[];
   destinations?: string[];
@@ -22,6 +28,8 @@ export type MediaPhoto = {
 export type PhotoAppearance = {
   title: string;
   href: string;
+  slug?: string;
+  day?: number;
 };
 
 export const mediaLibrary = mediaLibraryJson as MediaPhoto[];
@@ -77,9 +85,17 @@ export function getPhotoAppearances(photo: MediaPhoto): PhotoAppearance[] {
       appearances.push({
         title: `Day ${day.day} · ${day.title}`,
         href: `/itinerary/${day.slug}/`,
+        slug: day.slug,
+        day: day.day,
       });
     }
   }
 
   return appearances;
+}
+
+export function getPhotoDaySlugs(photo: MediaPhoto) {
+  return getPhotoAppearances(photo)
+    .filter((appearance) => appearance.slug)
+    .map((appearance) => appearance.slug as string);
 }
