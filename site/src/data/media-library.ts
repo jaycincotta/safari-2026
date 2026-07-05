@@ -18,6 +18,11 @@ export type MediaPhoto = {
   destinations?: string[];
 };
 
+export type PhotoAppearance = {
+  title: string;
+  href: string;
+};
+
 export const mediaLibrary = mediaLibraryJson as MediaPhoto[];
 
 const destinationByDaySlug: Record<string, string[]> = {
@@ -40,6 +45,10 @@ export function getFeaturedPhotos() {
   return mediaLibrary.filter((photo) => photo.featured);
 }
 
+export function getAllPhotos() {
+  return mediaLibrary;
+}
+
 export function getPhotosForDay(day: SafariDay) {
   const destinationKeys = destinationByDaySlug[day.slug] ?? [];
 
@@ -52,4 +61,24 @@ export function getPhotosForDay(day: SafariDay) {
 
 export function getPhotoCountByDay() {
   return Object.fromEntries(itinerary.map((day) => [day.slug, getPhotosForDay(day).length]));
+}
+
+export function getPhotoAppearances(photo: MediaPhoto): PhotoAppearance[] {
+  const appearances: PhotoAppearance[] = [];
+
+  if (photo.featured) {
+    appearances.push({ title: 'Home', href: '/' });
+  }
+
+  for (const day of itinerary) {
+    const appearsOnDay = getPhotosForDay(day).some((candidate) => candidate.slug === photo.slug);
+    if (appearsOnDay) {
+      appearances.push({
+        title: `Day ${day.day} · ${day.title}`,
+        href: `/itinerary/${day.slug}/`,
+      });
+    }
+  }
+
+  return appearances;
 }

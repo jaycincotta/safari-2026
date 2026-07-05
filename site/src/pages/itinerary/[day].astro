@@ -165,6 +165,7 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
               photo={photo}
               loading={index === 0 ? 'eager' : 'lazy'}
               sizes="(min-width: 960px) 33vw, 100vw"
+              showAttribution={true}
             />
           ))}
         </div>

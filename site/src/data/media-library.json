@@ -29,6 +29,20 @@
     "days": ["day-1", "day-2", "day-6", "day-7"]
   },
   {
+    "slug": "nairobi-elephant-orphanage",
+    "source": "nairobi-elephant-orphanage.jpg",
+    "alt": "Young elephants at the Sheldrick Wildlife Trust orphanage in Nairobi.",
+    "caption": "Nairobi elephant orphanage",
+    "location": "Nairobi, Kenya",
+    "artist": "Sara Ahmed Naqvi",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephant_Orphanage_Nairobi.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "days": ["day-7"]
+  },
+  {
     "slug": "amboseli-kilimanjaro",
     "source": "amboseli-kilimanjaro.jpg",
     "alt": "Elephants in Amboseli National Park with Mount Kilimanjaro in the background.",
@@ -71,6 +85,20 @@
     "widths": [640, 960, 1440, 1920],
     "defaultWidth": 1440,
     "destinations": ["ngorongoro"]
+  },
+  {
+    "slug": "masai-mara-giraffes",
+    "source": "masai-mara-giraffes.jpg",
+    "alt": "Three giraffes in the Masai Mara at golden hour.",
+    "caption": "Masai Mara giraffes",
+    "location": "Masai Mara National Reserve, Kenya",
+    "artist": "Volodymyr Burdiak",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Three_giraffes_01.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "destinations": ["masai-mara"]
   },
   {
     "slug": "serengeti-giraffe",

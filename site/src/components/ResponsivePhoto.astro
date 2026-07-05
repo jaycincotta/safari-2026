@@ -4,6 +4,9 @@ const {
   sizes = '(min-width: 960px) 42vw, 100vw',
   loading = 'lazy',
   class: className = '',
+  showAttribution = false,
+  overlayLinks = [],
+  overlayLabel = 'Appears on',
 } = Astro.props;
 
 const baseName = photo.source.replace(/\.[^.]+$/, '');
@@ -15,27 +18,39 @@ const srcsetFor = (extension) =>
 const fallbackSrc = `/media/optimized/${photo.slug}/${baseName}-${photo.defaultWidth}.jpg`;
 ---
 
-<figure class={`media-figure ${className}`.trim()}>
-  <picture class="media-frame">
-    <source type="image/webp" srcset={srcsetFor('webp')} sizes={sizes} />
-    <source type="image/jpeg" srcset={srcsetFor('jpg')} sizes={sizes} />
-    <img
-      src={fallbackSrc}
-      srcset={srcsetFor('jpg')}
-      sizes={sizes}
-      alt={photo.alt}
-      loading={loading}
-      decoding="async"
-    />
-  </picture>
-  <figcaption class="media-caption">
-    <strong>{photo.caption}</strong>
-    <span>{photo.location}</span>
-    <p>
-      Photo by {photo.artist}.
-      <a href={photo.sourcePage} target="_blank" rel="noreferrer">Source</a>
-      ·
-      <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.licenseLabel}</a>
-    </p>
-  </figcaption>
+<figure class:list={['media-figure', className, overlayLinks.length && 'media-figure--overlay']}>
+  <div class="media-frame">
+    <picture>
+      <source type="image/webp" srcset={srcsetFor('webp')} sizes={sizes} />
+      <source type="image/jpeg" srcset={srcsetFor('jpg')} sizes={sizes} />
+      <img
+        src={fallbackSrc}
+        srcset={srcsetFor('jpg')}
+        sizes={sizes}
+        alt={photo.alt}
+        loading={loading}
+        decoding="async"
+      />
+    </picture>
+    {overlayLinks.length ? (
+      <div class="media-overlay">
+        <div class="media-overlay__inner">
+          <span>{overlayLabel}</span>
+          <strong>{photo.caption}</strong>
+          <ul class="media-overlay__links">
+            {overlayLinks.map((link) => (
+              <li><a href={link.href}>{link.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ) : null}
+  </div>
+  {showAttribution ? (
+    <figcaption class="media-caption media-caption--subtle">
+      <p>
+        Photo by {photo.artist} · <a href={photo.sourcePage} target="_blank" rel="noreferrer">Source</a> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">{photo.licenseLabel}</a>
+      </p>
+    </figcaption>
+  ) : null}
 </figure>
