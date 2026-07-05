@@ -1,0 +1,139 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { destinationSpotlights, itinerary, planningNotes, tripFacts } from '../data/itinerary';
+
+const stayPlan = [
+  { label: 'Nairobi', detail: 'Ole Sereni Hotel for the city arrival, conservation, and transition days.' },
+  { label: 'Masai Mara', detail: 'Mara Fig Tree Camp for the pre-tour wildlife extension.' },
+  { label: 'Amboseli', detail: 'Kilima Safari Camp with Kilimanjaro-facing safari access.' },
+  { label: 'Karatu', detail: 'Country Lodge for the Ngorongoro stage and crater access.' },
+  { label: 'Serengeti', detail: 'ThornTree Camp for three nights in the park ecosystem.' },
+  { label: 'Lake Eyasi / Tarangire', detail: 'Lake Eyasi Safari Lodge and Sangaiwe Tented Lodge to close the route.' },
+];
+
+const routeStops = ['Nairobi', 'Masai Mara', 'Amboseli', 'Karatu', 'Serengeti', 'Lake Eyasi', 'Tarangire', 'Arusha'];
+---
+
+<Layout
+	title="Great Migration Safari 2026"
+	description="A static-first safari companion site for a 19-day Kenya and Tanzania itinerary, built from the working tour plan and ready for later journals, media, and print views."
+>
+	<main class="page-shell">
+		<section class="hero">
+			<div class="hero-panel">
+				<p class="eyebrow">Kenya + Tanzania | July 19 to August 6, 2026</p>
+				<h1>Great Migration Safari 2026</h1>
+				<p class="lead">
+					A static-first companion site for a 19-day route across Nairobi, the Masai Mara,
+					Amboseli, Ngorongoro, the Serengeti, Lake Eyasi, and Tarangire. This first version is
+					structured to publish fast, travel well, and grow into printable day plans, field notes,
+					photos, and short trip videos.
+				</p>
+				<div class="hero-actions">
+					<a class="button button--primary" href="#itinerary">Browse the 19-day route</a>
+					<a class="button button--ghost" href="/itinerary/day-1/">Open day-by-day pages</a>
+				</div>
+			</div>
+
+			<aside class="hero-aside">
+				<p class="eyebrow">Trip Frame</p>
+				<h2>Built for brochure clarity first</h2>
+				<p class="lead">
+					The site starts as a premium itinerary and planning surface. Later iterations can add
+					stronger print layouts, traveler journals, and shared media without changing the core
+					content structure.
+				</p>
+				<div class="stats">
+					<div class="stat">
+						<span>Duration</span>
+						<strong>{tripFacts.days} days</strong>
+					</div>
+					<div class="stat">
+						<span>Meals</span>
+						<strong>{tripFacts.meals}</strong>
+					</div>
+					<div class="stat">
+						<span>Wildlife focus</span>
+						<strong>{tripFacts.gameDrives}</strong>
+					</div>
+					<div class="stat">
+						<span>Countries</span>
+						<strong>{tripFacts.countries}</strong>
+					</div>
+				</div>
+			</aside>
+		</section>
+
+		<div class="section-stack">
+			<section class="section-card">
+				<p class="eyebrow">Route at a glance</p>
+				<h2>The safari arc</h2>
+				<div class="route-strip">
+					{routeStops.map((stop) => (
+						<div class="route-stop">
+							<span>Stop</span>
+							<strong>{stop}</strong>
+						</div>
+					))}
+				</div>
+			</section>
+
+			<section class="section-card">
+				<p class="eyebrow">Stay profile</p>
+				<h2>Where the route pauses</h2>
+				<div class="stay-grid">
+					{stayPlan.map((stay) => (
+						<div class="stay-card">
+							<span>Base</span>
+							<strong>{stay.label}</strong>
+							<p>{stay.detail}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			<section class="section-card">
+				<p class="eyebrow">Destination spotlights</p>
+				<h2>Context beyond the brochure</h2>
+				<div class="spotlight-grid">
+					{destinationSpotlights.map((spotlight) => (
+						<div class="spotlight">
+							<span>{spotlight.source}</span>
+							<strong>{spotlight.name}</strong>
+							<p>{spotlight.summary}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			<section class="section-card" id="itinerary">
+				<p class="eyebrow">Day by day</p>
+				<h2>The 19-day itinerary</h2>
+				<div class="itinerary-grid">
+					{itinerary.map((entry) => (
+						<article class="day-card">
+							<span>
+								Day {entry.day} · {new Date(entry.date).toLocaleDateString('en-US', {
+									month: 'short',
+									day: 'numeric',
+								})}
+							</span>
+							<h3>{entry.title}</h3>
+							<p>{entry.summary}</p>
+							<p><strong>Route:</strong> {entry.route}</p>
+							<a href={`/itinerary/${entry.slug}/`}>View day details</a>
+						</article>
+					))}
+				</div>
+			</section>
+
+			<section class="section-card">
+				<p class="eyebrow">Planning notes</p>
+				<h2>Useful constraints to surface early</h2>
+				<ul class="note-list">
+					{planningNotes.map((note) => <li>{note}</li>)}
+				</ul>
+			</section>
+		</div>
+	</main>
+</Layout>

@@ -1,0 +1,77 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { itinerary } from '../../data/itinerary';
+
+export function getStaticPaths() {
+  return itinerary.map((entry) => ({
+    params: { day: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const currentIndex = itinerary.findIndex((item) => item.slug === entry.slug);
+const previous = currentIndex > 0 ? itinerary[currentIndex - 1] : null;
+const next = currentIndex < itinerary.length - 1 ? itinerary[currentIndex + 1] : null;
+
+const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+---
+
+<Layout title={`Day ${entry.day} | Great Migration Safari 2026`} description={entry.summary}>
+  <main class="page-shell">
+    <section class="detail-hero">
+      <a class="back-link" href="/#itinerary">Back to full itinerary</a>
+      <p class="eyebrow">Day {entry.day}</p>
+      <h1>{entry.title}</h1>
+      <p class="lead">{entry.summary}</p>
+
+      <div class="meta-grid">
+        <div>
+          <span>Date</span>
+          <strong>{formattedDate}</strong>
+        </div>
+        <div>
+          <span>Route</span>
+          <strong>{entry.route}</strong>
+        </div>
+        <div>
+          <span>Overnight</span>
+          <strong>{entry.overnight}</strong>
+        </div>
+        <div>
+          <span>Meals</span>
+          <strong>{entry.meals.length ? entry.meals.join(', ') : 'In transit'}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-body">
+      <article class="detail-card">
+        <h2>What Defines This Day</h2>
+        <ul class="detail-list">
+          {entry.highlights.map((item: string) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <h2>Companion Notes</h2>
+        <p>
+          This page is the first-pass structure for the day-by-day system. It is already usable for
+          trip planning and later can be expanded with printable layouts, personal notes, photos, and
+          field updates.
+        </p>
+        <button class="print-button" type="button" onclick="window.print()">Print this day</button>
+      </article>
+    </section>
+
+    <nav class="day-nav" aria-label="Day navigation">
+      {previous ? <a href={`/itinerary/${previous.slug}/`}>Previous: Day {previous.day}</a> : <span />}
+      {next ? <a href={`/itinerary/${next.slug}/`}>Next: Day {next.day}</a> : <span />}
+    </nav>
+  </main>
+</Layout>
