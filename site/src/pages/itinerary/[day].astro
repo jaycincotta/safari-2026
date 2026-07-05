@@ -14,6 +14,7 @@ const currentIndex = itinerary.findIndex((item) => item.slug === entry.slug);
 const previous = currentIndex > 0 ? itinerary[currentIndex - 1] : null;
 const next = currentIndex < itinerary.length - 1 ? itinerary[currentIndex + 1] : null;
 const companion = companionContentBySlug[entry.slug];
+const nearbyDays = itinerary.slice(Math.max(0, currentIndex - 2), Math.min(itinerary.length, currentIndex + 3));
 
 const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
   weekday: 'long',
@@ -49,6 +50,29 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
           <span class="day-browse__spacer" />
         )}
       </nav>
+      <section class="day-rail" aria-label="Swipeable nearby day summaries">
+        {nearbyDays.map((dayItem) => {
+          const summary = companionContentBySlug[dayItem.slug]?.synopsis ?? dayItem.summary;
+          const isCurrent = dayItem.slug === entry.slug;
+
+          return (
+            <a
+              class:list={['day-rail__card', isCurrent && 'day-rail__card--current']}
+              href={`/itinerary/${dayItem.slug}/`}
+              aria-current={isCurrent ? 'page' : undefined}
+            >
+              <span>
+                Day {dayItem.day} · {new Date(dayItem.date).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+              <strong>{dayItem.title}</strong>
+              <p>{summary}</p>
+            </a>
+          );
+        })}
+      </section>
       <p class="eyebrow">Day {entry.day}</p>
       <h1>{entry.title}</h1>
       <div class="summary-stack">

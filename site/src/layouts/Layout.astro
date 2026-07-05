@@ -136,6 +136,7 @@ const {
 	.itinerary-grid,
 	.summary-stack,
 	.synopsis-rail,
+	.day-rail,
 	.detail-body,
 	.deep-dive-grid,
 	.meta-grid,
@@ -349,6 +350,50 @@ const {
 		text-align: center;
 	}
 
+	.day-rail {
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(240px, 1fr);
+		overflow-x: auto;
+		padding-bottom: 6px;
+		scroll-snap-type: x proximity;
+		margin-bottom: 20px;
+	}
+
+	.day-rail__card {
+		padding: 18px;
+		border-radius: 22px;
+		border: 1px solid var(--line);
+		background: rgba(255, 255, 255, 0.5);
+		text-decoration: none;
+		scroll-snap-align: start;
+		min-height: 150px;
+	}
+
+	.day-rail__card span {
+		display: block;
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.12em;
+		opacity: 0.68;
+	}
+
+	.day-rail__card strong {
+		display: block;
+		margin-top: 8px;
+		font-size: 1.08rem;
+	}
+
+	.day-rail__card p {
+		margin: 10px 0 0;
+		line-height: 1.55;
+		font-size: 0.96rem;
+	}
+
+	.day-rail__card--current {
+		background: linear-gradient(135deg, rgba(213, 138, 58, 0.18), rgba(93, 107, 67, 0.18));
+		border-color: rgba(163, 85, 45, 0.35);
+	}
+
 	.meta-grid {
 		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 		margin-top: 22px;
@@ -383,6 +428,10 @@ const {
 
 		.day-browse {
 			grid-template-columns: 1fr;
+		}
+
+		.day-rail {
+			grid-auto-columns: minmax(260px, 86vw);
 		}
 
 		.day-browse__status,
