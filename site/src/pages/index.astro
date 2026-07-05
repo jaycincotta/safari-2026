@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ResponsivePhoto from '../components/ResponsivePhoto.astro';
 import { companionContentBySlug, destinationSpotlights, itinerary, planningNotes, tripFacts } from '../data/itinerary';
+import { getFeaturedPhotos, getPhotoCountByDay } from '../data/media-library';
 
 const stayPlan = [
   { label: 'Nairobi', detail: 'Ole Sereni Hotel for the city arrival, conservation, and transition days.' },
@@ -12,6 +14,8 @@ const stayPlan = [
 ];
 
 const routeStops = ['Nairobi', 'Masai Mara', 'Amboseli', 'Karatu', 'Serengeti', 'Lake Eyasi', 'Tarangire', 'Arusha'];
+const featuredPhotos = getFeaturedPhotos();
+const photoCountByDay = getPhotoCountByDay();
 ---
 
 <Layout
@@ -78,6 +82,28 @@ const routeStops = ['Nairobi', 'Masai Mara', 'Amboseli', 'Karatu', 'Serengeti', 
 				</div>
 			</section>
 
+			<section class="section-card media-showcase">
+				<div class="media-showcase__intro">
+					<p class="eyebrow">Media pass</p>
+					<h2>First licensed photography for the route</h2>
+					<p class="lead">
+						The site now has a real image pipeline: high-resolution source files stay in the repo,
+						a build-time optimizer generates lighter responsive variants for publish, and the page
+						only ships the sizes it actually needs.
+					</p>
+				</div>
+				<div class="media-grid">
+					{featuredPhotos.map((photo, index) => (
+						<ResponsivePhoto
+							photo={photo}
+							loading={index === 0 ? 'eager' : 'lazy'}
+							sizes={index === 0 ? '(min-width: 960px) 58vw, 100vw' : '(min-width: 960px) 42vw, 100vw'}
+							class={index === 0 ? 'media-figure--feature' : ''}
+						/>
+					))}
+				</div>
+			</section>
+
 			<section class="section-card">
 				<p class="eyebrow">Stay profile</p>
 				<h2>Where the route pauses</h2>
@@ -122,6 +148,7 @@ const routeStops = ['Nairobi', 'Masai Mara', 'Amboseli', 'Karatu', 'Serengeti', 
 							<p>{companionContentBySlug[entry.slug]?.synopsis ?? entry.summary}</p>
 							<p><strong>Route:</strong> {entry.route}</p>
 							<p><strong>Pace:</strong> {companionContentBySlug[entry.slug]?.pace}</p>
+							{photoCountByDay[entry.slug] ? <p><strong>Photos:</strong> {photoCountByDay[entry.slug]} curated image{photoCountByDay[entry.slug] > 1 ? 's' : ''}</p> : null}
 							<a href={`/itinerary/${entry.slug}/`}>View day details</a>
 						</article>
 					))}

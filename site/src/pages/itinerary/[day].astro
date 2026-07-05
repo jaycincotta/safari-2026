@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import ResponsivePhoto from '../../components/ResponsivePhoto.astro';
 import { companionContentBySlug, itinerary } from '../../data/itinerary';
+import { getPhotosForDay } from '../../data/media-library';
 
 export function getStaticPaths() {
   return itinerary.map((entry) => ({
@@ -15,6 +17,7 @@ const previous = currentIndex > 0 ? itinerary[currentIndex - 1] : null;
 const next = currentIndex < itinerary.length - 1 ? itinerary[currentIndex + 1] : null;
 const companion = companionContentBySlug[entry.slug];
 const nearbyDays = itinerary.slice(Math.max(0, currentIndex - 2), Math.min(itinerary.length, currentIndex + 3));
+const photos = getPhotosForDay(entry);
 
 const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
   weekday: 'long',
@@ -145,6 +148,28 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
         <button class="print-button" type="button" onclick="window.print()">Print this day</button>
       </article>
     </section>
+
+    {photos.length ? (
+      <section class="section-card media-showcase media-showcase--detail" aria-label="Curated photography for this day">
+        <div class="media-showcase__intro">
+          <p class="eyebrow">Field gallery</p>
+          <h2>Relevant photography for this stop</h2>
+          <p class="lead">
+            Images are attached by stop and day, so the same optimized photo can appear anywhere it is
+            relevant without duplicating source files or rebuilding unchanged assets.
+          </p>
+        </div>
+        <div class="media-grid media-grid--detail">
+          {photos.map((photo, index) => (
+            <ResponsivePhoto
+              photo={photo}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              sizes="(min-width: 960px) 33vw, 100vw"
+            />
+          ))}
+        </div>
+      </section>
+    ) : null}
 
     <section class="deep-dive-grid" aria-label="Richer context for this day">
       {companion.deeperDive.map((item) => (
