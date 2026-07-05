@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { destinationSpotlights, itinerary, planningNotes, tripFacts } from '../data/itinerary';
+import { companionContentBySlug, destinationSpotlights, itinerary, planningNotes, tripFacts } from '../data/itinerary';
 
 const stayPlan = [
   { label: 'Nairobi', detail: 'Ole Sereni Hotel for the city arrival, conservation, and transition days.' },
@@ -119,8 +119,9 @@ const routeStops = ['Nairobi', 'Masai Mara', 'Amboseli', 'Karatu', 'Serengeti', 
 								})}
 							</span>
 							<h3>{entry.title}</h3>
-							<p>{entry.summary}</p>
+							<p>{companionContentBySlug[entry.slug]?.synopsis ?? entry.summary}</p>
 							<p><strong>Route:</strong> {entry.route}</p>
+							<p><strong>Pace:</strong> {companionContentBySlug[entry.slug]?.pace}</p>
 							<a href={`/itinerary/${entry.slug}/`}>View day details</a>
 						</article>
 					))}

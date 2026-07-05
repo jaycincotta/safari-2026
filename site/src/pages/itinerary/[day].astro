@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { itinerary } from '../../data/itinerary';
+import { companionContentBySlug, itinerary } from '../../data/itinerary';
 
 export function getStaticPaths() {
   return itinerary.map((entry) => ({
@@ -13,6 +13,7 @@ const { entry } = Astro.props;
 const currentIndex = itinerary.findIndex((item) => item.slug === entry.slug);
 const previous = currentIndex > 0 ? itinerary[currentIndex - 1] : null;
 const next = currentIndex < itinerary.length - 1 ? itinerary[currentIndex + 1] : null;
+const companion = companionContentBySlug[entry.slug];
 
 const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
   weekday: 'long',
@@ -26,9 +27,47 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
   <main class="page-shell">
     <section class="detail-hero">
       <a class="back-link" href="/#itinerary">Back to full itinerary</a>
+      <nav class="day-browse" aria-label="Quick browse between days">
+        {previous ? (
+          <a class="day-browse__link" href={`/itinerary/${previous.slug}/`}>
+            <span>Previous</span>
+            <strong>Day {previous.day}</strong>
+          </a>
+        ) : (
+          <span class="day-browse__spacer" />
+        )}
+        <div class="day-browse__status">
+          <span>Quick browse</span>
+          <strong>Day {entry.day} of {itinerary.length}</strong>
+        </div>
+        {next ? (
+          <a class="day-browse__link day-browse__link--next" href={`/itinerary/${next.slug}/`}>
+            <span>Next</span>
+            <strong>Day {next.day}</strong>
+          </a>
+        ) : (
+          <span class="day-browse__spacer" />
+        )}
+      </nav>
       <p class="eyebrow">Day {entry.day}</p>
       <h1>{entry.title}</h1>
-      <p class="lead">{entry.summary}</p>
+      <div class="summary-stack">
+        <article class="synopsis-card synopsis-card--primary">
+          <span>Synopsis</span>
+          <p>{companion.synopsis}</p>
+        </article>
+        <div class="synopsis-rail">
+          <article class="synopsis-card">
+            <span>Pace</span>
+            <strong>{companion.pace}</strong>
+          </article>
+          <article class="synopsis-card">
+            <span>Mood</span>
+            <strong>{companion.mood}</strong>
+          </article>
+        </div>
+      </div>
+      <p class="lead">{companion.richerSummary}</p>
 
       <div class="meta-grid">
         <div>
@@ -59,14 +98,38 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
       </article>
 
       <article class="detail-card">
+        <h2>Fast Read Highlights</h2>
+        <ul class="detail-list">
+          {companion.featuredMoments.map((item: string) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <h2>Practical Notes</h2>
+        <ul class="detail-list">
+          {companion.practicalNotes.map((item: string) => <li>{item}</li>)}
+        </ul>
+      </article>
+
+      <article class="detail-card">
         <h2>Companion Notes</h2>
         <p>
-          This page is the first-pass structure for the day-by-day system. It is already usable for
-          trip planning and later can be expanded with printable layouts, personal notes, photos, and
-          field updates.
+          These day pages are designed for quick skim-first browsing at the top and richer reading
+          lower on the page, so they stay light on bandwidth while still growing into a fuller trip
+          companion over time.
         </p>
         <button class="print-button" type="button" onclick="window.print()">Print this day</button>
       </article>
+    </section>
+
+    <section class="deep-dive-grid" aria-label="Richer context for this day">
+      {companion.deeperDive.map((item) => (
+        <article class="detail-card dive-card">
+          <span class="eyebrow">Read Deeper</span>
+          <h2>{item.title}</h2>
+          <p>{item.body}</p>
+        </article>
+      ))}
     </section>
 
     <nav class="day-nav" aria-label="Day navigation">
