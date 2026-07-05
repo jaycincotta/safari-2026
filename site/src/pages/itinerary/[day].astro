@@ -80,19 +80,9 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
       <h1>{entry.title}</h1>
       <div class="summary-stack">
         <article class="synopsis-card synopsis-card--primary">
-          <span>Synopsis</span>
+          <span>At a glance</span>
           <p>{companion.synopsis}</p>
         </article>
-        <div class="synopsis-rail">
-          <article class="synopsis-card">
-            <span>Pace</span>
-            <strong>{companion.pace}</strong>
-          </article>
-          <article class="synopsis-card">
-            <span>Mood</span>
-            <strong>{companion.mood}</strong>
-          </article>
-        </div>
       </div>
       <p class="lead">{companion.richerSummary}</p>
 
@@ -125,7 +115,7 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
       </article>
 
       <article class="detail-card">
-        <h2>Fast Read Highlights</h2>
+        <h2>Look Out For</h2>
         <ul class="detail-list">
           {companion.featuredMoments.map((item: string) => <li>{item}</li>)}
         </ul>
@@ -139,11 +129,10 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
       </article>
 
       <article class="detail-card">
-        <h2>Companion Notes</h2>
+        <h2>For the day</h2>
         <p>
-          These day pages are designed for quick skim-first browsing at the top and richer reading
-          lower on the page, so they stay light on bandwidth while still growing into a fuller trip
-          companion over time.
+			  Keep this page as the quick reference for the route, the overnight stop, and the few
+			  moments we most want to remember before heading out.
         </p>
         <button class="print-button" type="button" onclick="window.print()">Print this day</button>
       </article>
@@ -153,10 +142,10 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
       <section class="section-card media-showcase media-showcase--detail" aria-label="Curated photography for this day">
         <div class="media-showcase__intro">
           <p class="eyebrow">Field gallery</p>
-          <h2>Relevant photography for this stop</h2>
+		  <h2>Scenes from this stretch of the trip</h2>
           <p class="lead">
-            Images are attached by stop and day, so the same optimized photo can appear anywhere it is
-            relevant without duplicating source files or rebuilding unchanged assets.
+			  These photos are here to help us place the landscape, wildlife, and feel of the day before
+			  we are back in the vehicle.
           </p>
         </div>
         <div class="media-grid media-grid--detail">

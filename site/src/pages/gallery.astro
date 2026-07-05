@@ -11,16 +11,16 @@ const galleryItems = getAllPhotos().map((photo) => ({
 
 <Layout
 	title="Gallery | Great Migration Safari 2026"
-	description="A full gallery of the licensed safari photography used across the itinerary site."
+	description="A visual guide to the places and wildlife along our safari route."
 >
 	<main class="page-shell">
 		<section class="detail-hero">
 			<a class="back-link" href="/">Back to itinerary overview</a>
 			<p class="eyebrow">Gallery</p>
-			<h1>Safari image library</h1>
+			<h1>Photo gallery</h1>
 			<p class="lead">
-				Every optimized image in one place. Hover any photo to see which itinerary pages reuse it,
-				then jump straight to those pages.
+				Use these images as a quick visual guide to the route. Each photo links back to the days
+				where that place or wildlife stop shows up in the itinerary.
 			</p>
 		</section>
 
@@ -30,6 +30,7 @@ const galleryItems = getAllPhotos().map((photo) => ({
 					<ResponsivePhoto
 						photo={photo}
 						overlayLinks={appearances}
+						overlayLabel="Linked days"
 						loading={index < 4 ? 'eager' : 'lazy'}
 						sizes="(min-width: 1100px) 28vw, (min-width: 720px) 44vw, 100vw"
 						class="media-figure--gallery"

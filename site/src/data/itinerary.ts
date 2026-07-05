@@ -340,25 +340,25 @@ export const destinationSpotlights = [
     name: 'Amboseli National Park',
     summary:
       'Amboseli is known for large elephant herds, wide-open plains, and one of East Africa’s most recognizable views of Mount Kilimanjaro.',
-    source: 'Kenya Wildlife Service',
+    source: 'Elephants and open views',
   },
   {
     name: 'Ngorongoro Conservation Area',
     summary:
       'Ngorongoro combines a dramatic crater landscape with dense wildlife populations and long human-history significance within the wider Serengeti ecosystem.',
-    source: 'UNESCO World Heritage Centre',
+    source: 'Crater landscape',
   },
   {
     name: 'Serengeti',
     summary:
       'The Serengeti portion of the trip is built around extended time on the plains, maximizing sunrise, midday, and sunset wildlife patterns over three nights in camp.',
-    source: 'Trip itinerary synthesis',
+    source: 'Longest safari stretch',
   },
   {
     name: 'Tarangire National Park',
     summary:
       'Tarangire closes the route with baobab-dotted landscapes, strong elephant sightings, and one of the trip’s best birdwatching windows.',
-    source: 'Trip itinerary synthesis',
+    source: 'Final wildlife chapter',
   },
 ];
 
@@ -366,7 +366,7 @@ export const planningNotes = [
   'Kenya requires an eTA before arrival, and Tanzania visa requirements should be confirmed before travel.',
   'A yellow fever certificate is required when entering Tanzania from Kenya on this route.',
   'Soft duffel luggage is recommended for the safari vehicles and lodge transfers.',
-  'Several transfer days are long and dusty, so the early site should treat logistics as part of the story, not as fine print.',
+  'Several transfer days are long and dusty, so it helps to treat the logistics as part of the trip instead of background detail.',
 ];
 
 export const companionContentBySlug: Record<string, DayCompanionContent> = {
@@ -431,7 +431,7 @@ export const companionContentBySlug: Record<string, DayCompanionContent> = {
     pace: 'Long transfer + first safari',
     mood: 'Lift-off',
     richerSummary:
-      'The day is about moving from city context into safari country. By evening, the trip shifts from anticipation to active wildlife watching, with the reserve finally replacing the brochure in your mind.',
+      'The day is about moving from city context into safari country. By evening, anticipation gives way to active wildlife watching as the reserve finally becomes real around us.',
     featuredMoments: [
       'Cross the Rift Valley toward Narok',
       'Arrive in camp and immediately feel the landscape change',
@@ -525,7 +525,7 @@ export const companionContentBySlug: Record<string, DayCompanionContent> = {
       {
         title: 'Why this day matters',
         body:
-          'The trip is deliberately built in chapters. Returning to Nairobi after the Mara helps separate the extension from the core itinerary so the next days do not blur together.',
+          'The trip naturally falls into chapters. Returning to Nairobi after the Mara gives us a clean break before the conservation visits and the cross-border run into Tanzania.',
       },
       {
         title: 'Good use of the city pause',
@@ -539,7 +539,7 @@ export const companionContentBySlug: Record<string, DayCompanionContent> = {
     ],
   },
   'day-7': {
-    synopsis: 'A Nairobi day built around conservation, giraffes, local craft, and the formal welcome to the safari proper.',
+    synopsis: 'A Nairobi day centered on conservation, giraffes, local craft, and the formal welcome into the safari proper.',
     pace: 'Full but urban',
     mood: 'Connection',
     richerSummary:
@@ -823,7 +823,7 @@ export const companionContentBySlug: Record<string, DayCompanionContent> = {
     pace: 'Choice stop + transfer + safari',
     mood: 'Varied',
     richerSummary:
-      'The day deliberately mixes local encounter and classic park scenery. By afternoon, Tarangire reintroduces wildlife scale, but with a different visual identity built around baobabs and elephant corridors.',
+      'The day mixes local encounter and classic park scenery. By afternoon, Tarangire brings back wide wildlife scale in a landscape defined by baobabs and elephant corridors.',
     featuredMoments: [
       'Choice between fruit-vendor or craftsman visit',
       'Drive into Tarangire National Park',
