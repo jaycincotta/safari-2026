@@ -20,7 +20,6 @@ const {
 		<slot />
 	</body>
 </html>
-
 <style is:global>
 	:root {
 		--sand: #efe2c5;
@@ -44,11 +43,11 @@ const {
 		margin: 0;
 		min-height: 100vh;
 		color: var(--ink);
-		font-family: "Aptos", "Segoe UI", sans-serif;
 		background:
 			radial-gradient(circle at top left, rgba(213, 138, 58, 0.28), transparent 30%),
 			radial-gradient(circle at top right, rgba(93, 107, 67, 0.18), transparent 25%),
 			linear-gradient(180deg, #f3e5c9 0%, #f8f4ea 34%, #efe4cd 100%);
+		font-family: "Aptos", "Segoe UI", sans-serif;
 	}
 
 	a {
@@ -286,33 +285,68 @@ const {
 		background: rgba(255, 255, 255, 0.35);
 	}
 
+	.gallery-hero {
+		display: grid;
+		gap: 20px;
+	}
+
+	.gallery-hero__content {
+		display: grid;
+		gap: 14px;
+		align-content: start;
+	}
+
+	.gallery-hero__kicker {
+		margin: -2px 0 0;
+		font-size: 0.94rem;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		opacity: 0.62;
+	}
+
+	.gallery-hero__actions {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
 	.gallery-filter {
 		display: grid;
-		gap: 18px;
+		gap: 14px;
+		padding: 18px;
+		border-radius: 16px;
+		border: 1px solid var(--line);
+		background: rgba(255, 255, 255, 0.58);
 	}
 
 	.gallery-filter__intro p:last-child {
 		margin: 0;
-		line-height: 1.6;
+		line-height: 1.5;
+		font-size: 0.94rem;
 	}
 
 	.gallery-filter__status {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		gap: 16px;
-		flex-wrap: wrap;
+		gap: 10px;
 	}
 
+	.gallery-filter__toggle,
 	.gallery-filter__clear {
 		border: 1px solid var(--line);
 		background: rgba(255, 255, 255, 0.64);
 		color: var(--clay);
 		border-radius: 999px;
-		padding: 10px 16px;
+		padding: 9px 14px;
 		font: inherit;
 		font-weight: 700;
 		cursor: pointer;
+	}
+
+	.gallery-filter__toggle {
+		background: rgba(48, 64, 51, 0.08);
 	}
 
 	.gallery-filter__clear:disabled {
@@ -323,12 +357,12 @@ const {
 	.calendar-grid {
 		display: grid;
 		grid-template-columns: repeat(7, minmax(0, 1fr));
-		gap: 10px;
+		gap: 6px;
 	}
 
 	.calendar-grid__head {
-		padding: 0 4px 4px;
-		font-size: 0.78rem;
+		padding: 0 2px 2px;
+		font-size: 0.66rem;
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
@@ -337,14 +371,14 @@ const {
 
 	.calendar-grid__day,
 	.calendar-grid__pad {
-		min-height: 108px;
-		border-radius: 14px;
-		padding: 12px;
+		min-height: 64px;
+		border-radius: 10px;
+		padding: 8px;
 		border: 1px solid var(--line);
 		background: rgba(255, 255, 255, 0.54);
 		display: grid;
 		align-content: start;
-		gap: 8px;
+		gap: 4px;
 		text-align: left;
 	}
 
@@ -368,7 +402,7 @@ const {
 
 	.calendar-grid__day span,
 	.calendar-grid__pad span {
-		font-size: 0.74rem;
+		font-size: 0.62rem;
 		text-transform: uppercase;
 		letter-spacing: 0.12em;
 		opacity: 0.66;
@@ -376,13 +410,13 @@ const {
 
 	.calendar-grid__day strong,
 	.calendar-grid__pad strong {
-		font-size: 1.35rem;
+		font-size: 1rem;
 		line-height: 1;
 	}
 
 	.calendar-grid__day em {
 		font-style: normal;
-		font-size: 0.86rem;
+		font-size: 0.68rem;
 		color: var(--clay);
 	}
 
@@ -767,6 +801,7 @@ const {
 
 		.calendar-grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 8px;
 		}
 
 		.calendar-grid__head {
@@ -846,6 +881,21 @@ const {
 		.day-nav a:last-child {
 			text-align: left;
 		}
+
+		.gallery-filter {
+			padding: 16px;
+		}
+	}
+
+	@media (min-width: 900px) {
+		.gallery-hero {
+			grid-template-columns: minmax(0, 1.2fr) minmax(300px, 360px);
+			align-items: start;
+		}
+
+		.gallery-hero__content {
+			padding-right: 12px;
+		}
 	}
 
 	@media print {
@@ -873,10 +923,9 @@ const {
 		a {
 			text-decoration: none;
 			color: inherit;
-
+		}
 		.calendar-grid {
 			grid-template-columns: 1fr;
-		}
 		}
 	}
 </style>

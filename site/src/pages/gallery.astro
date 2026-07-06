@@ -23,6 +23,7 @@ calendarEnd.setDate(endDate.getDate() + (6 - endDate.getDay()));
 const calendarCells: Array<
 	| {
 			isoDate: string;
+			dateLabel: string;
 			label: number;
 			monthLabel: string;
 			day?: (typeof itinerary)[number];
@@ -37,6 +38,7 @@ for (let cursor = new Date(calendarStart); cursor <= calendarEnd; cursor.setDate
 
 	calendarCells.push({
 		isoDate,
+		dateLabel: cursor.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
 		label: cursor.getDate(),
 		monthLabel: cursor.toLocaleDateString('en-US', { month: 'short' }),
 		day: itineraryDay,
@@ -55,29 +57,45 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 	description="A visual guide to the places and wildlife along our safari route."
 >
 	<main class="page-shell">
-		<section class="detail-hero">
-			<a class="back-link" href="/">Back to itinerary overview</a>
-			<p class="eyebrow">Gallery</p>
-			<h1>Photo gallery</h1>
-			<p class="lead">
-				Use these images as a quick visual guide to the route. Each photo links back to the days
-				where that place or wildlife stop shows up in the itinerary.
-			</p>
-		</section>
-
-		<section class="section-card gallery-filter" aria-labelledby="gallery-filter-title">
-			<div class="gallery-filter__intro">
-				<p class="eyebrow">Day selector</p>
-				<h2 id="gallery-filter-title">Browse by safari day</h2>
-				<p>
-					Select one day to focus the gallery, or click a second day to select a range.
+		<section class="detail-hero gallery-hero">
+			<div class="gallery-hero__content">
+				<a class="back-link" href="/">Back to itinerary overview</a>
+				<p class="eyebrow">Gallery</p>
+				<p class="gallery-hero__kicker">Photo gallery</p>
+				<h1 data-gallery-title>All safari dates</h1>
+				<p class="lead" data-gallery-summary>
+					Select a day or date range to focus the gallery. Each photo still links back to the matching itinerary days.
 				</p>
+				<div class="gallery-hero__actions">
+					<button
+						class="gallery-filter__toggle"
+						type="button"
+						data-gallery-toggle
+						aria-expanded="false"
+						aria-controls="gallery-filter-panel"
+					>
+						Change dates
+					</button>
+					<button class="gallery-filter__clear" type="button" data-gallery-clear disabled>Clear selection</button>
+				</div>
 			</div>
-			<div class="gallery-filter__status">
-				<strong data-gallery-selection-label>Showing all safari photos</strong>
-				<button class="gallery-filter__clear" type="button" data-gallery-clear disabled>Clear selection</button>
-			</div>
-			<div class="calendar-grid" data-gallery-calendar>
+
+			<section
+				class="gallery-filter"
+				id="gallery-filter-panel"
+				data-gallery-filter-panel
+				aria-labelledby="gallery-filter-title"
+				hidden
+			>
+				<div class="gallery-filter__intro">
+					<p class="eyebrow">Day selector</p>
+					<h2 id="gallery-filter-title">Choose dates</h2>
+					<p>Select one day to focus the gallery, or click a second day to select a range.</p>
+				</div>
+				<div class="gallery-filter__status">
+					<strong data-gallery-selection-label>Showing all safari photos</strong>
+				</div>
+				<div class="calendar-grid" data-gallery-calendar>
 				<div class="calendar-grid__head">Sun</div>
 				<div class="calendar-grid__head">Mon</div>
 				<div class="calendar-grid__head">Tue</div>
@@ -94,6 +112,7 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 								data-day-slug={cell.day.slug}
 								data-day-number={cell.day.day}
 								data-day-title={cell.day.title}
+								data-date-label={cell.dateLabel}
 								aria-pressed="false"
 							>
 								<span>{cell.monthLabel}</span>
@@ -109,6 +128,7 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 					) : null,
 				)}
 			</div>
+		</section>
 		</section>
 
 		<section class="section-card">
@@ -134,17 +154,23 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 <script is:inline>
 	const dayButtons = Array.from(document.querySelectorAll('[data-day-slug]'));
 	const galleryItems = Array.from(document.querySelectorAll('[data-gallery-item]'));
+	const galleryTitle = document.querySelector('[data-gallery-title]');
+	const gallerySummary = document.querySelector('[data-gallery-summary]');
 	const selectionLabel = document.querySelector('[data-gallery-selection-label]');
 	const clearButton = document.querySelector('[data-gallery-clear]');
 	const emptyState = document.querySelector('[data-gallery-empty]');
+	const filterPanel = document.querySelector('[data-gallery-filter-panel]');
+	const toggleButton = document.querySelector('[data-gallery-toggle]');
 
 	let startDay = null;
 	let endDay = null;
+	let isFilterOpen = false;
 
 	const dayMeta = dayButtons.map((button) => ({
 		slug: button.dataset.daySlug,
 		dayNumber: Number(button.dataset.dayNumber),
 		title: button.dataset.dayTitle,
+		dateLabel: button.dataset.dateLabel,
 		button,
 	}));
 
@@ -170,6 +196,25 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 			return;
 		}
 		selectionLabel.textContent = `Showing photos for Days ${selectedRange[0].dayNumber}–${selectedRange[selectedRange.length - 1].dayNumber}`;
+	}
+
+	function updateTitle(selectedRange) {
+		if (!galleryTitle || !gallerySummary) return;
+
+		if (!selectedRange.length) {
+			galleryTitle.textContent = 'All safari dates';
+			gallerySummary.textContent = 'Select a day or date range to focus the gallery. Each photo still links back to the matching itinerary days.';
+			return;
+		}
+
+		if (selectedRange.length === 1) {
+			galleryTitle.textContent = `${selectedRange[0].dateLabel} · Day ${selectedRange[0].dayNumber}`;
+			gallerySummary.textContent = selectedRange[0].title;
+			return;
+		}
+
+		galleryTitle.textContent = `${selectedRange[0].dateLabel} to ${selectedRange[selectedRange.length - 1].dateLabel}`;
+		gallerySummary.textContent = `Days ${selectedRange[0].dayNumber}–${selectedRange[selectedRange.length - 1].dayNumber}`;
 	}
 
 	function updateButtons(selectedRange) {
@@ -213,12 +258,29 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 		window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
 	}
 
+	function syncFilterPanel() {
+		const desktopView = window.matchMedia('(min-width: 900px)').matches;
+		const shouldShow = desktopView || isFilterOpen;
+
+		if (filterPanel) {
+			filterPanel.hidden = !shouldShow;
+		}
+
+		if (toggleButton) {
+			toggleButton.hidden = desktopView;
+			toggleButton.setAttribute('aria-expanded', shouldShow ? 'true' : 'false');
+			toggleButton.textContent = shouldShow && !desktopView ? 'Hide date selector' : 'Change dates';
+		}
+	}
+
 	function syncUi() {
 		const selectedRange = getSelectedRange();
 		updateLabel(selectedRange);
+		updateTitle(selectedRange);
 		updateButtons(selectedRange);
 		updateGallery(selectedRange);
 		syncQuery(selectedRange);
+		syncFilterPanel();
 		if (clearButton) clearButton.disabled = selectedRange.length === 0;
 	}
 
@@ -242,6 +304,13 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 		endDay = null;
 		syncUi();
 	});
+
+	toggleButton?.addEventListener('click', () => {
+		isFilterOpen = !isFilterOpen;
+		syncUi();
+	});
+
+	window.addEventListener('resize', syncUi);
 
 	const initialParams = new URLSearchParams(window.location.search);
 	const initialDay = initialParams.get('day');
