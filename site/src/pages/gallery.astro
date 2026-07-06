@@ -58,44 +58,41 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 >
 	<main class="page-shell">
 		<section class="detail-hero gallery-hero">
-			<div class="gallery-hero__content">
-				<a class="back-link" href="/">Back to itinerary overview</a>
-				<p class="eyebrow">Gallery</p>
-				<p class="gallery-hero__kicker">Photo gallery</p>
+			<a class="back-link" href="/">Back to itinerary overview</a>
+			<div class="gallery-title-row">
 				<h1 data-gallery-title>All safari dates</h1>
-				<p class="lead" data-gallery-summary>
-					Select a day or date range to focus the gallery. Each photo still links back to the matching itinerary days.
-				</p>
-				<div class="gallery-hero__actions">
-					<button
-						class="gallery-filter__toggle"
-						type="button"
-						data-gallery-toggle
-						aria-expanded="false"
-						aria-controls="gallery-filter-panel"
-					>
-						Change dates
-					</button>
-					<button class="gallery-filter__clear" type="button" data-gallery-clear disabled>Clear selection</button>
-				</div>
+				<button
+					class="gallery-edit-button"
+					type="button"
+					data-gallery-toggle
+					aria-expanded="false"
+					aria-controls="gallery-filter-panel"
+					aria-label="Edit dates"
+				>
+					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+						<path d="M4 16.25V20h3.75L18.81 8.94l-3.75-3.75L4 16.25zm14.71-8.04a1.003 1.003 0 0 0 0-1.42l-1.5-1.5a1.003 1.003 0 0 0-1.42 0l-1.17 1.17 3.75 3.75 1.34-1.34z" fill="currentColor"/>
+					</svg>
+					<span class="sr-only">Edit dates</span>
+				</button>
 			</div>
+			<p class="gallery-selection-note" data-gallery-selection-label>Showing all safari photos</p>
+		</section>
 
-			<section
-				class="gallery-filter"
-				id="gallery-filter-panel"
-				data-gallery-filter-panel
-				aria-labelledby="gallery-filter-title"
-				hidden
-			>
-				<div class="gallery-filter__intro">
-					<p class="eyebrow">Day selector</p>
-					<h2 id="gallery-filter-title">Choose dates</h2>
-					<p>Select one day to focus the gallery, or click a second day to select a range.</p>
-				</div>
-				<div class="gallery-filter__status">
-					<strong data-gallery-selection-label>Showing all safari photos</strong>
-				</div>
-				<div class="calendar-grid" data-gallery-calendar>
+		<section
+			class="section-card gallery-filter"
+			id="gallery-filter-panel"
+			data-gallery-filter-panel
+			aria-labelledby="gallery-filter-title"
+			hidden
+		>
+			<div class="gallery-filter__intro">
+				<h2 id="gallery-filter-title">Choose dates</h2>
+				<p>Select one day to focus the gallery, or click a second day to select a range.</p>
+			</div>
+			<div class="gallery-filter__status">
+				<button class="gallery-filter__clear" type="button" data-gallery-clear disabled>Show all</button>
+			</div>
+			<div class="calendar-grid" data-gallery-calendar>
 				<div class="calendar-grid__head">Sun</div>
 				<div class="calendar-grid__head">Mon</div>
 				<div class="calendar-grid__head">Tue</div>
@@ -129,7 +126,6 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 				)}
 			</div>
 		</section>
-		</section>
 
 		<section class="section-card">
 			<div class="gallery-grid" data-gallery-grid>
@@ -155,7 +151,6 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 	const dayButtons = Array.from(document.querySelectorAll('[data-day-slug]'));
 	const galleryItems = Array.from(document.querySelectorAll('[data-gallery-item]'));
 	const galleryTitle = document.querySelector('[data-gallery-title]');
-	const gallerySummary = document.querySelector('[data-gallery-summary]');
 	const selectionLabel = document.querySelector('[data-gallery-selection-label]');
 	const clearButton = document.querySelector('[data-gallery-clear]');
 	const emptyState = document.querySelector('[data-gallery-empty]');
@@ -165,6 +160,7 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 	let startDay = null;
 	let endDay = null;
 	let isFilterOpen = false;
+	let pendingStartDay = null;
 
 	const dayMeta = dayButtons.map((button) => ({
 		slug: button.dataset.daySlug,
@@ -187,6 +183,16 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 
 	function updateLabel(selectedRange) {
 		if (!selectionLabel) return;
+		if (isFilterOpen) {
+			if (!pendingStartDay) {
+				selectionLabel.textContent = 'Selection mode: choose a start date, then a second date for a range.';
+				return;
+			}
+
+			selectionLabel.textContent = `Selection mode: ${pendingStartDay.dateLabel} is selected. Tap it again for one day, or choose another date to finish the range.`;
+			return;
+		}
+
 		if (!selectedRange.length) {
 			selectionLabel.textContent = 'Showing all safari photos';
 			return;
@@ -199,27 +205,31 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 	}
 
 	function updateTitle(selectedRange) {
-		if (!galleryTitle || !gallerySummary) return;
+		if (!galleryTitle) return;
 
 		if (!selectedRange.length) {
 			galleryTitle.textContent = 'All safari dates';
-			gallerySummary.textContent = 'Select a day or date range to focus the gallery. Each photo still links back to the matching itinerary days.';
 			return;
 		}
 
 		if (selectedRange.length === 1) {
-			galleryTitle.textContent = `${selectedRange[0].dateLabel} · Day ${selectedRange[0].dayNumber}`;
-			gallerySummary.textContent = selectedRange[0].title;
+			galleryTitle.textContent = selectedRange[0].dateLabel;
 			return;
 		}
 
-		galleryTitle.textContent = `${selectedRange[0].dateLabel} to ${selectedRange[selectedRange.length - 1].dateLabel}`;
-		gallerySummary.textContent = `Days ${selectedRange[0].dayNumber}–${selectedRange[selectedRange.length - 1].dayNumber}`;
+		galleryTitle.textContent = `${selectedRange[0].dateLabel} - ${selectedRange[selectedRange.length - 1].dateLabel}`;
 	}
 
 	function updateButtons(selectedRange) {
 		const selectedSlugs = new Set(selectedRange.map((day) => day.slug));
 		dayMeta.forEach((day) => {
+			if (isFilterOpen && pendingStartDay) {
+				const isPending = pendingStartDay.slug === day.slug;
+				day.button.setAttribute('aria-pressed', isPending ? 'true' : 'false');
+				day.button.dataset.selectionState = isPending ? 'pending' : '';
+				return;
+			}
+
 			const isSelected = selectedSlugs.has(day.slug);
 			day.button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
 			day.button.dataset.selectionState = isSelected ? 'selected' : '';
@@ -259,18 +269,24 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 	}
 
 	function syncFilterPanel() {
-		const desktopView = window.matchMedia('(min-width: 900px)').matches;
-		const shouldShow = desktopView || isFilterOpen;
+		const shouldShow = isFilterOpen;
 
 		if (filterPanel) {
 			filterPanel.hidden = !shouldShow;
 		}
 
 		if (toggleButton) {
-			toggleButton.hidden = desktopView;
 			toggleButton.setAttribute('aria-expanded', shouldShow ? 'true' : 'false');
-			toggleButton.textContent = shouldShow && !desktopView ? 'Hide date selector' : 'Change dates';
+			toggleButton.setAttribute('aria-label', shouldShow ? 'Close date selector' : 'Edit dates');
 		}
+	}
+
+	function commitSelection(nextStartDay, nextEndDay = null) {
+		startDay = nextStartDay;
+		endDay = nextEndDay;
+		pendingStartDay = null;
+		isFilterOpen = false;
+		syncUi();
 	}
 
 	function syncUi() {
@@ -286,31 +302,38 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 
 	dayMeta.forEach((day) => {
 		day.button.addEventListener('click', () => {
-			if (!startDay || (startDay && endDay)) {
-				startDay = day;
-				endDay = null;
-			} else if (startDay.slug === day.slug) {
-				startDay = null;
-				endDay = null;
-			} else {
-				endDay = day;
+			if (!isFilterOpen) {
+				return;
 			}
-			syncUi();
+
+			if (!pendingStartDay) {
+				pendingStartDay = day;
+				syncUi();
+				return;
+			}
+
+			if (pendingStartDay.slug === day.slug) {
+				commitSelection(day, null);
+				return;
+			}
+
+			commitSelection(pendingStartDay, day);
 		});
 	});
 
 	clearButton?.addEventListener('click', () => {
 		startDay = null;
 		endDay = null;
+		pendingStartDay = null;
+		isFilterOpen = false;
 		syncUi();
 	});
 
 	toggleButton?.addEventListener('click', () => {
 		isFilterOpen = !isFilterOpen;
+		pendingStartDay = null;
 		syncUi();
 	});
-
-	window.addEventListener('resize', syncUi);
 
 	const initialParams = new URLSearchParams(window.location.search);
 	const initialDay = initialParams.get('day');
