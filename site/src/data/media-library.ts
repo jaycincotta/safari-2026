@@ -34,6 +34,28 @@ export type PhotoAppearance = {
 
 export const mediaLibrary = mediaLibraryJson as MediaPhoto[];
 
+const favoritePhotoSlugsByDaySlug: Partial<Record<SafariDay['slug'], string[]>> = {
+  'day-1': ['nairobi-giraffe-centre'],
+  'day-2': ['nairobi-giraffe-centre-portrait', 'nairobi-giraffe-centre-karen'],
+  'day-3': ['masai-mara-lion-portrait', 'masai-mara-giraffes-horizon'],
+  'day-4': ['masai-mara-giraffes', 'masai-mara-lion'],
+  'day-5': ['masai-mara-lion', 'masai-mara-giraffes-horizon'],
+  'day-6': ['nairobi-giraffe-centre'],
+  'day-7': ['nairobi-elephant-orphanage-close', 'nairobi-giraffe-centre-karen'],
+  'day-8': ['amboseli-kilimanjaro', 'amboseli-kilimanjaro-close'],
+  'day-9': ['amboseli-elephants-kilimanjaro-legacy', 'amboseli-kilimanjaro-close'],
+  'day-10': ['amboseli-kilimanjaro-close', 'amboseli-elephants-kilimanjaro-legacy'],
+  'day-11': ['ngorongoro-zebra-close', 'ngorongoro-grants-zebra'],
+  'day-12': ['serengeti-giraffe-portrait', 'serengeti-giraffe'],
+  'day-13': ['serengeti-giraffe', 'serengeti-giraffe-portrait'],
+  'day-14': ['serengeti-giraffe-portrait', 'serengeti-giraffe'],
+  'day-15': ['lake-eyasi-lovebirds-close', 'lake-eyasi-lovebirds'],
+  'day-16': ['lake-eyasi-lovebirds', 'lake-eyasi-lovebirds-close'],
+  'day-17': ['tarangire-elephants-close', 'tarangire-elephants'],
+  'day-18': ['tarangire-elephants', 'tarangire-elephants-close'],
+  'day-19': ['tarangire-elephants-close', 'tarangire-elephants'],
+};
+
 const destinationByDaySlug: Record<string, string[]> = {
   'day-3': ['masai-mara'],
   'day-4': ['masai-mara'],
@@ -66,6 +88,33 @@ export function getPhotosForDay(day: SafariDay) {
     const destinationMatch = destinationKeys.some((key) => photo.destinations?.includes(key));
     return directDayMatch || destinationMatch;
   });
+}
+
+export function getFavoritePhotosForDay(day: SafariDay, limit = 2) {
+  const photos = getPhotosForDay(day);
+  const favoriteSlugs = favoritePhotoSlugsByDaySlug[day.slug] ?? [];
+  const favoriteRank = new Map(favoriteSlugs.map((slug, index) => [slug, index]));
+
+  return [...photos]
+    .sort((left, right) => {
+      const leftRank = favoriteRank.get(left.slug);
+      const rightRank = favoriteRank.get(right.slug);
+
+      if (leftRank !== undefined && rightRank !== undefined) {
+        return leftRank - rightRank;
+      }
+
+      if (leftRank !== undefined) {
+        return -1;
+      }
+
+      if (rightRank !== undefined) {
+        return 1;
+      }
+
+      return left.caption.localeCompare(right.caption);
+    })
+    .slice(0, limit);
 }
 
 export function getPhotoCountByDay() {

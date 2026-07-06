@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ResponsivePhoto from '../components/ResponsivePhoto.astro';
+import { formatLocalIsoDate, parseItineraryDate } from '../data/dates';
 import { itinerary } from '../data/itinerary';
 import { getAllPhotos, getPhotoAppearances, getPhotoDaySlugs } from '../data/media-library';
 
@@ -10,8 +11,8 @@ const galleryItems = getAllPhotos().map((photo) => ({
 	daySlugs: getPhotoDaySlugs(photo),
 }));
 
-const startDate = new Date(itinerary[0].date);
-const endDate = new Date(itinerary[itinerary.length - 1].date);
+const startDate = parseItineraryDate(itinerary[0].date);
+const endDate = parseItineraryDate(itinerary[itinerary.length - 1].date);
 
 const calendarStart = new Date(startDate);
 calendarStart.setDate(startDate.getDate() - startDate.getDay());
@@ -31,7 +32,7 @@ const calendarCells: Array<
 > = [];
 
 for (let cursor = new Date(calendarStart); cursor <= calendarEnd; cursor.setDate(cursor.getDate() + 1)) {
-	const isoDate = cursor.toISOString().slice(0, 10);
+	const isoDate = formatLocalIsoDate(cursor);
 	const itineraryDay = itinerary.find((entry) => entry.date === isoDate);
 
 	calendarCells.push({
@@ -147,6 +148,8 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 		button,
 	}));
 
+	const dayMetaBySlug = new Map(dayMeta.map((day) => [day.slug, day]));
+
 	function getSelectedRange() {
 		if (!startDay) return [];
 		if (!endDay) return [startDay];
@@ -194,11 +197,28 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 		}
 	}
 
+	function syncQuery(selectedRange) {
+		const url = new URL(window.location.href);
+		url.searchParams.delete('day');
+		url.searchParams.delete('startDay');
+		url.searchParams.delete('endDay');
+
+		if (selectedRange.length === 1) {
+			url.searchParams.set('day', selectedRange[0].slug);
+		} else if (selectedRange.length > 1) {
+			url.searchParams.set('startDay', selectedRange[0].slug);
+			url.searchParams.set('endDay', selectedRange[selectedRange.length - 1].slug);
+		}
+
+		window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+	}
+
 	function syncUi() {
 		const selectedRange = getSelectedRange();
 		updateLabel(selectedRange);
 		updateButtons(selectedRange);
 		updateGallery(selectedRange);
+		syncQuery(selectedRange);
 		if (clearButton) clearButton.disabled = selectedRange.length === 0;
 	}
 
@@ -222,6 +242,20 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 		endDay = null;
 		syncUi();
 	});
+
+	const initialParams = new URLSearchParams(window.location.search);
+	const initialDay = initialParams.get('day');
+	const initialStartDay = initialParams.get('startDay');
+	const initialEndDay = initialParams.get('endDay');
+
+	if (initialDay && dayMetaBySlug.has(initialDay)) {
+		startDay = dayMetaBySlug.get(initialDay) ?? null;
+	} else if (initialStartDay && dayMetaBySlug.has(initialStartDay)) {
+		startDay = dayMetaBySlug.get(initialStartDay) ?? null;
+		if (initialEndDay && dayMetaBySlug.has(initialEndDay)) {
+			endDay = dayMetaBySlug.get(initialEndDay) ?? null;
+		}
+	}
 
 	syncUi();
 </script>

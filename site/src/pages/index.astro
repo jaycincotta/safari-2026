@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ResponsivePhoto from '../components/ResponsivePhoto.astro';
+import { formatItineraryDate } from '../data/dates';
 import { companionContentBySlug, destinationSpotlights, itinerary, planningNotes, tripFacts } from '../data/itinerary';
 import { getFeaturedPhotos, getPhotoCountByDay } from '../data/media-library';
 
@@ -138,7 +139,7 @@ const photoCountByDay = getPhotoCountByDay();
 					{itinerary.map((entry) => (
 						<article class="day-card">
 							<span>
-								Day {entry.day} · {new Date(entry.date).toLocaleDateString('en-US', {
+								Day {entry.day} · {formatItineraryDate(entry.date, {
 									month: 'short',
 									day: 'numeric',
 								})}

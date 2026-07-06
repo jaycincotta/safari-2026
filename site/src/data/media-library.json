@@ -87,6 +87,21 @@
     "days": ["day-7"]
   },
   {
+    "slug": "nairobi-elephant-orphanage-close",
+    "source": "nairobi-elephant-orphanage.jpg",
+    "alt": "Closer crop of young elephants at the Nairobi orphanage.",
+    "caption": "Nairobi orphanage close-up",
+    "location": "Nairobi, Kenya",
+    "artist": "Sara Ahmed Naqvi",
+    "licenseLabel": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Elephant_Orphanage_Nairobi.jpg",
+    "widths": [640, 960, 1440, 1920],
+    "defaultWidth": 1440,
+    "crop": { "left": 0.12, "top": 0.16, "width": 0.62, "height": 0.54 },
+    "days": ["day-7"]
+  },
+  {
     "slug": "nairobi-elephant-drinking",
     "source": "nairobi-elephant-drinking.jpg",
     "alt": "Young elephant at the Nairobi orphanage drinking from a hose.",

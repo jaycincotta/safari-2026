@@ -1,8 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ResponsivePhoto from '../../components/ResponsivePhoto.astro';
+import { formatItineraryDate } from '../../data/dates';
 import { companionContentBySlug, itinerary } from '../../data/itinerary';
-import { getPhotosForDay } from '../../data/media-library';
+import { getFavoritePhotosForDay, getPhotosForDay } from '../../data/media-library';
 
 export function getStaticPaths() {
   return itinerary.map((entry) => ({
@@ -18,8 +19,14 @@ const next = currentIndex < itinerary.length - 1 ? itinerary[currentIndex + 1] :
 const companion = companionContentBySlug[entry.slug];
 const orderedDays = [...itinerary.slice(currentIndex), ...itinerary.slice(0, currentIndex)];
 const photos = getPhotosForDay(entry);
+const spotlightPhotos = getFavoritePhotosForDay(entry, 2);
+const galleryDayHref = `/gallery/?day=${entry.slug}`;
+const galleryLinkLabel =
+  photos.length > spotlightPhotos.length
+    ? `View all ${photos.length} photos for Day ${entry.day}`
+    : `Open Day ${entry.day} in the gallery`;
 
-const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
+const formattedDate = formatItineraryDate(entry.date, {
   weekday: 'long',
   month: 'long',
   day: 'numeric',
@@ -63,7 +70,7 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
               aria-current={isCurrent ? 'page' : undefined}
             >
               <span>
-                Day {dayItem.day} · {new Date(dayItem.date).toLocaleDateString('en-US', {
+                Day {dayItem.day} · {formatItineraryDate(dayItem.date, {
                   month: 'short',
                   day: 'numeric',
                 })}
@@ -127,22 +134,23 @@ const formattedDate = new Date(entry.date).toLocaleDateString('en-US', {
       </article>
     </section>
 
-    {photos.length ? (
+    {spotlightPhotos.length ? (
       <section class="section-card media-showcase media-showcase--detail" aria-label="Curated photography for this day">
         <div class="media-showcase__intro">
           <p class="eyebrow">Field gallery</p>
-		  <h2>Scenes from this stretch of the trip</h2>
+          <h2>Scenes from this stretch of the trip</h2>
           <p class="lead">
-			  These photos are here to help us place the landscape, wildlife, and feel of the day before
-			  we are back in the vehicle.
+            These photos are here to help us place the landscape, wildlife, and feel of the day before
+            we are back in the vehicle.
           </p>
+          <a class="gallery-link" href={galleryDayHref}>{galleryLinkLabel}</a>
         </div>
         <div class="media-grid media-grid--detail">
-          {photos.map((photo, index) => (
+          {spotlightPhotos.map((photo, index) => (
             <ResponsivePhoto
               photo={photo}
               loading={index === 0 ? 'eager' : 'lazy'}
-              sizes="(min-width: 960px) 33vw, 100vw"
+              sizes="(min-width: 960px) 48vw, 100vw"
               showAttribution={true}
             />
           ))}
