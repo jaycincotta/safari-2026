@@ -24,6 +24,7 @@ const calendarCells: Array<
 	| {
 			isoDate: string;
 			dateLabel: string;
+			weekdayLabel: string;
 			label: number;
 			monthLabel: string;
 			day?: (typeof itinerary)[number];
@@ -39,6 +40,7 @@ for (let cursor = new Date(calendarStart); cursor <= calendarEnd; cursor.setDate
 	calendarCells.push({
 		isoDate,
 		dateLabel: cursor.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+		weekdayLabel: cursor.toLocaleDateString('en-US', { weekday: 'short' }),
 		label: cursor.getDate(),
 		monthLabel: cursor.toLocaleDateString('en-US', { month: 'short' }),
 		day: itineraryDay,
@@ -114,12 +116,14 @@ for (let index = 0; index < calendarCells.length; index += 7) {
 							>
 								<span>{cell.monthLabel}</span>
 								<strong>{cell.label}</strong>
+								<i>{cell.weekdayLabel}</i>
 								<em>Day {cell.day.day}</em>
 							</button>
 						) : (
 							<div class="calendar-grid__pad" aria-hidden="true">
 								<span>{cell.monthLabel}</span>
 								<strong>{cell.label}</strong>
+								<i>{cell.weekdayLabel}</i>
 							</div>
 						)
 					) : null,

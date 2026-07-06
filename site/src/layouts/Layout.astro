@@ -455,6 +455,17 @@ const {
 		color: var(--clay);
 	}
 
+	.calendar-grid__day i,
+	.calendar-grid__pad i {
+		display: none;
+		font-style: normal;
+		font-size: 0.66rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: rgba(27, 29, 26, 0.62);
+	}
+
 	.calendar-grid__pad {
 		opacity: 0.42;
 	}
@@ -841,6 +852,52 @@ const {
 
 		.calendar-grid__head {
 			display: none;
+		}
+
+		.calendar-grid__day,
+		.calendar-grid__pad {
+			min-height: 0;
+			grid-template-columns: auto minmax(0, 1fr) auto;
+			grid-template-areas:
+				"weekday month meta"
+				"weekday date meta";
+			align-items: center;
+			column-gap: 10px;
+				row-gap: 2px;
+		}
+
+		.calendar-grid__day span,
+		.calendar-grid__pad span {
+			grid-area: month;
+			align-self: end;
+			justify-self: center;
+			text-align: center;
+		}
+
+		.calendar-grid__day strong,
+		.calendar-grid__pad strong {
+			grid-area: date;
+			font-size: 1.05rem;
+			align-self: start;
+			justify-self: center;
+			text-align: center;
+		}
+
+		.calendar-grid__day i,
+		.calendar-grid__pad i {
+			display: block;
+			grid-area: weekday;
+			font-size: 0.62rem;
+			align-self: center;
+			line-height: 1;
+		}
+
+		.calendar-grid__day em {
+			grid-area: meta;
+			justify-self: end;
+			font-size: 0.62rem;
+			align-self: center;
+			text-align: right;
 		}
 
 		.hero-actions {
