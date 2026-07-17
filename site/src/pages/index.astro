@@ -28,6 +28,15 @@ if (!heroPhoto) {
 	title="Great Migration Safari 2026"
 	description="Our 19-day safari through Kenya and Tanzania, with the route, stays, and day plans in one place."
 >
+	<section class="hero-banner">
+		<ResponsivePhoto
+			photo={heroPhoto}
+			loading="eager"
+			sizes="100vw"
+			class="hero-banner__figure"
+		/>
+	</section>
+
 	<main class="page-shell">
 		<section class="hero">
 			<div class="hero-panel">
@@ -46,17 +55,7 @@ if (!heroPhoto) {
 				</div>
 			</div>
 
-			<div class="hero-media">
-				<ResponsivePhoto
-					photo={heroPhoto}
-					loading="eager"
-					sizes="(min-width: 960px) 38vw, 100vw"
-					class="hero-media__figure"
-					showAttribution={true}
-				/>
-			</div>
-
-			<aside class="hero-aside hero-aside--wide">
+			<aside class="hero-aside">
 				<p class="eyebrow">Trip frame</p>
 				<h2>What this trip covers</h2>
 				<p class="lead">
