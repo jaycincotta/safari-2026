@@ -17,6 +17,8 @@
         "git config": true,
         "netlify": true,
         "ForEach-Object": true,
-        "Resolve-DnsName": true
+        "Resolve-DnsName": true,
+        "Add-Type": true,
+        "npm run media:optimize": true
     }
 }

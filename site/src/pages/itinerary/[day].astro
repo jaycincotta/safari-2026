@@ -20,7 +20,7 @@ const browseAlignmentClass = previous && next ? null : previous ? 'day-browse--s
 const companion = companionContentBySlug[entry.slug];
 const orderedDays = [...itinerary.slice(currentIndex), ...itinerary.slice(0, currentIndex)];
 const photos = getPhotosForDay(entry);
-const spotlightPhotos = getFavoritePhotosForDay(entry, 2);
+const spotlightPhotos = getFavoritePhotosForDay(entry, 6);
 const galleryDayHref = `/gallery/?day=${entry.slug}`;
 const galleryLinkLabel =
   photos.length > spotlightPhotos.length

@@ -1,5 +1,19 @@
 [
   {
+    "slug": "africa-here-we-come",
+    "source": "africa-here-we-come.png",
+    "alt": "Jay and companion smiling with safari gear beside a plane before departure.",
+    "caption": "Africa, here we come",
+    "location": "Departure day",
+    "artist": "Jay Cincotta",
+    "licenseLabel": "Personal photo",
+    "licenseUrl": "",
+    "sourcePage": "",
+    "widths": [640, 960, 1280, 1536],
+    "defaultWidth": 1280,
+    "creditType": "personal"
+  },
+  {
     "slug": "masai-mara-lion",
     "source": "masai-mara-lion.jpg",
     "alt": "Male lion resting in Masai Mara National Park.",

@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import ResponsivePhoto from '../components/ResponsivePhoto.astro';
 import { formatItineraryDate } from '../data/dates';
 import { companionContentBySlug, destinationSpotlights, itinerary, planningNotes, tripFacts } from '../data/itinerary';
-import { getFeaturedPhotos, getPhotoCountByDay } from '../data/media-library';
+import { getFeaturedPhotos, getPhotoCountByDay, mediaLibrary } from '../data/media-library';
 
 const stayPlan = [
   { label: 'Nairobi', detail: 'Ole Sereni Hotel for the city arrival, conservation, and transition days.' },
@@ -16,7 +16,12 @@ const stayPlan = [
 
 const routeStops = ['Nairobi', 'Masai Mara', 'Amboseli', 'Karatu', 'Serengeti', 'Lake Eyasi', 'Tarangire', 'Arusha'];
 const featuredPhotos = getFeaturedPhotos();
+const heroPhoto = mediaLibrary.find((photo) => photo.slug === 'africa-here-we-come');
 const photoCountByDay = getPhotoCountByDay();
+
+if (!heroPhoto) {
+	throw new Error('Missing home hero photo: africa-here-we-come');
+}
 ---
 
 <Layout
@@ -41,7 +46,17 @@ const photoCountByDay = getPhotoCountByDay();
 				</div>
 			</div>
 
-			<aside class="hero-aside">
+			<div class="hero-media">
+				<ResponsivePhoto
+					photo={heroPhoto}
+					loading="eager"
+					sizes="(min-width: 960px) 38vw, 100vw"
+					class="hero-media__figure"
+					showAttribution={true}
+				/>
+			</div>
+
+			<aside class="hero-aside hero-aside--wide">
 				<p class="eyebrow">Trip frame</p>
 				<h2>What this trip covers</h2>
 				<p class="lead">

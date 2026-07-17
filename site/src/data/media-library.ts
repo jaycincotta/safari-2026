@@ -34,6 +34,19 @@ export type PhotoAppearance = {
 
 export const mediaLibrary = mediaLibraryJson as MediaPhoto[];
 
+function dedupePhotosBySource(photos: MediaPhoto[]) {
+  const seenSources = new Set<string>();
+
+  return photos.filter((photo) => {
+    if (seenSources.has(photo.source)) {
+      return false;
+    }
+
+    seenSources.add(photo.source);
+    return true;
+  });
+}
+
 const favoritePhotoSlugsByDaySlug: Partial<Record<SafariDay['slug'], string[]>> = {
   'day-1': ['nairobi-giraffe-centre'],
   'day-2': ['nairobi-giraffe-centre-portrait', 'nairobi-giraffe-centre-karen'],
@@ -73,48 +86,48 @@ const destinationByDaySlug: Record<string, string[]> = {
 };
 
 export function getFeaturedPhotos() {
-  return mediaLibrary.filter((photo) => photo.featured);
+  return dedupePhotosBySource(mediaLibrary.filter((photo) => photo.featured));
 }
 
 export function getAllPhotos() {
-  return mediaLibrary;
+  return dedupePhotosBySource(mediaLibrary);
 }
 
 export function getPhotosForDay(day: SafariDay) {
   const destinationKeys = destinationByDaySlug[day.slug] ?? [];
-
-  return mediaLibrary.filter((photo) => {
-    const directDayMatch = photo.days?.includes(day.slug) ?? false;
-    const destinationMatch = destinationKeys.some((key) => photo.destinations?.includes(key));
-    return directDayMatch || destinationMatch;
-  });
-}
-
-export function getFavoritePhotosForDay(day: SafariDay, limit = 2) {
-  const photos = getPhotosForDay(day);
   const favoriteSlugs = favoritePhotoSlugsByDaySlug[day.slug] ?? [];
   const favoriteRank = new Map(favoriteSlugs.map((slug, index) => [slug, index]));
 
-  return [...photos]
-    .sort((left, right) => {
-      const leftRank = favoriteRank.get(left.slug);
-      const rightRank = favoriteRank.get(right.slug);
+  return dedupePhotosBySource(
+    [...mediaLibrary]
+      .filter((photo) => {
+        const directDayMatch = photo.days?.includes(day.slug) ?? false;
+        const destinationMatch = destinationKeys.some((key) => photo.destinations?.includes(key));
+        return directDayMatch || destinationMatch;
+      })
+      .sort((left, right) => {
+        const leftRank = favoriteRank.get(left.slug);
+        const rightRank = favoriteRank.get(right.slug);
 
-      if (leftRank !== undefined && rightRank !== undefined) {
-        return leftRank - rightRank;
-      }
+        if (leftRank !== undefined && rightRank !== undefined) {
+          return leftRank - rightRank;
+        }
 
-      if (leftRank !== undefined) {
-        return -1;
-      }
+        if (leftRank !== undefined) {
+          return -1;
+        }
 
-      if (rightRank !== undefined) {
-        return 1;
-      }
+        if (rightRank !== undefined) {
+          return 1;
+        }
 
-      return left.caption.localeCompare(right.caption);
-    })
-    .slice(0, limit);
+        return left.caption.localeCompare(right.caption);
+      }),
+  );
+}
+
+export function getFavoritePhotosForDay(day: SafariDay, limit = 2) {
+  return getPhotosForDay(day).slice(0, limit);
 }
 
 export function getPhotoCountByDay() {
